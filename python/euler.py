@@ -687,7 +687,50 @@ def problem345_impl1(m):
         if divides(skip, count):
             print count / nsums * 100, "% Done"
         count += 1
+    return cached_max
 
+def problem345_impl2(m):
+    """Find the Matrix Sum of matrix `m` using memoization.
+
+    The Matrix Sum of a matrix m is defined as the maximum sum of matrix
+    elements in m such that each element is the only element is its own
+    row and column.
+
+    TODO: Not yet fast enough.  This solution is probably an incorrect
+    approach--the limitation is not the n-number sum (15 for the full
+    problem matrix), but how many sums are required (n!).  For this
+    problem to be answerable in under a minute, there must be some way
+    to reduce that space.
+    """
+    nrows, ncols = m.shape
+    rows = array(range(nrows))
+    pcols = (array(p) for p in permutations(xrange(ncols)))
+    nsums = factorial(ncols)
+
+    cache = {}
+    def sums_cache(rows, cols):
+        if len(cols) == 1:
+            return m[rows[0], cols[0]]
+        else:
+            try:
+                total = cache[tuple(cols)]
+                return total
+            except(KeyError):
+                total = sums_cache(rows[:-1], cols[:-1]) + m[rows[-1], cols[-1]]
+                cache[tuple(cols)] = total
+                return total
+
+    count = 0
+    cached_max = 0
+    skip = 100000
+    for cols in pcols:
+        current_sum = sums_cache(rows, cols)
+        if current_sum > cached_max:
+            cached_max = current_sum
+        if divides(skip, count):
+            print count / nsums * 100, "% Done"
+        count += 1
+    return cached_max
 
 ############
 ### Data ###
@@ -862,6 +905,38 @@ p345_test_data = array([
     [287, 63,343,169,583],
     [627,343,773,959,943],
     [767,473,103,699,303]])
+
+p345_test_data_2 = array([
+    [  6, 53,183,439,863,497,383],
+    [627,343,773,959,943,767,473],
+    [447,283,463, 29, 23,487,463],
+    [217,623,  3,399,853,407,103],
+    [960,376,682,962,300,780,486],
+    [870,456,192,162,593,473,915],
+    [973,965,905,919,133,673,665]])
+
+p345_test_data_3 = array([
+    [  6, 53,183,439,863,497,383,563, 79],
+    [627,343,773,959,943,767,473,103,699],
+    [447,283,463, 29, 23,487,463,993,119],
+    [217,623,  3,399,853,407,103,983, 89],
+    [960,376,682,962,300,780,486,502,912],
+    [870,456,192,162,593,473,915, 45,989],
+    [973,965,905,919,133,673,665,235,509],
+    [322,148,972,962,286,255,941,541,265],
+    [445,721, 11,525,473, 65,511,164,138]])
+
+p345_test_data_4 = array([
+    [  6, 53,183,439,863,497,383,563, 79,973],
+    [627,343,773,959,943,767,473,103,699,303],
+    [447,283,463, 29, 23,487,463,993,119,883],
+    [217,623,  3,399,853,407,103,983, 89,463],
+    [960,376,682,962,300,780,486,502,912,800],
+    [870,456,192,162,593,473,915, 45,989,873],
+    [973,965,905,919,133,673,665,235,509,613],
+    [322,148,972,962,286,255,941,541,265,323],
+    [445,721, 11,525,473, 65,511,164,138,672],
+    [414,456,310,312,798,104,566,520,302,248]])
 
 p345_data = array([
     [  6, 53,183,439,863,497,383,563, 79,973,287, 63,343,169,583],
