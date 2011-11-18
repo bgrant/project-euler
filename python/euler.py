@@ -55,7 +55,7 @@ def nth(iterable, n):
 def takefirst(pred, iterable):
     return dropwhile(lambda x: not pred(x), iterable).next()
 
-def take_n(n, iterable):
+def take(n, iterable):
     return islice(iterable, 0, n)
 
 def chars(n):
@@ -252,7 +252,7 @@ def wheel_factorization(n, nprimes=10):
     nprimes is reduced if inner_circle_len >= n/2
     """
     while True:
-        initial_primes = array(list(take_n(nprimes, primes_impl0())), dtype=int)
+        initial_primes = array(list(take(nprimes, primes_impl0())), dtype=int)
         inner_circle_len = initial_primes.prod()
         if inner_circle_len < n/2: # heuristic for good nprimes
             break
@@ -465,7 +465,7 @@ def problem14_impl2(n=int(1e6)):
 
     Use collatz_lens generator.
     """
-    return array(list(take_n(n, collatz_lens()))).argmax() + 1
+    return array(list(take(n, collatz_lens()))).argmax() + 1
 
 problem14 = problem14_impl2
 
@@ -585,7 +585,7 @@ def problem37_impl1(ulimit=int(1e6)):
     ps = primes(ulimit)
     truncatable_ps = (x for x in ps if set(truncations(x)).issubset(ps)
                              and x not in set([2,3,5,7]))
-    return sum(take_n(11, truncatable_ps))
+    return sum(take(11, truncatable_ps))
 
 def problem40():
     """Find the product of several digits."""
