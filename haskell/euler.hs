@@ -72,11 +72,11 @@ sumOfSquares xs = sum $ map (^2) xs
 squareOfSums :: [Integer] -> Integer
 squareOfSums xs = (sum xs) ^ 2
 
-triangleNums :: [Int]
-triangleNums = scanl1 (+) [1..]
-
 divisors :: Int -> [Int]
 divisors n = [x | x <- [1..n], n `mod` x == 0]
+
+triangleNums :: [Int]
+triangleNums = scanl1 (+) [1..]
 
 triangleDivisors = [(n, divisors n) | n <- triangleNums]
 
@@ -84,6 +84,15 @@ factorial :: Integer -> Integer
 factorial 0 = 1
 factorial n = n * factorial (n-1)
 
+collatzSeq n
+    | (even n) = n : collatzSeq (n `quot` 2)
+    | (odd n)  = n : collatzSeq (3*n + 1)
+
+collatzLen n = (length (takeWhile (>1) (collatzSeq n))) + 1
+collatzPairs llimit ulimit = [(n,collatzLen n) | n <- [llimit..ulimit]]
+
+maxPair :: [(Integer, Int)] -> (Integer, Int)
+maxPair xs = foldl1 (\x y -> if (snd x > snd y) then x else y) xs
 
 --------------
 -- Problems --
@@ -141,6 +150,8 @@ problem12 = fst $ head (take 1 (dropWhile (\x -> length (snd x) <= 500) triangle
 
 problem13 :: [Char]
 problem13 = take 10 (show $ sum prob13data)
+
+problem14 = maxPair (collatzPairs 800000 999999)
 
 problem16 :: Int
 problem16 = sum $ map digitToInt (show (2^1000))
