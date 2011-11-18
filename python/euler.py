@@ -582,7 +582,7 @@ def problem37_impl0(ulimit=int(1e6)):
 def problem37_impl1(ulimit=int(1e6)):
     """Find the sum of the only 11 primes that are both truncatable from left
     to right and right to left."""
-    ps = primes_impl3(ulimit)
+    ps = primes(ulimit)
     truncatable_ps = (x for x in ps if set(truncations(x)).issubset(ps)
                              and x not in set([2,3,5,7]))
     return sum(take_n(11, truncatable_ps))
