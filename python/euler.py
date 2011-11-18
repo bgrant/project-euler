@@ -583,7 +583,15 @@ def problem37(ulimit=int(1e6)):
     return sum(take(11, truncatable_ps))
 
 def problem40():
-    """Find the product of several digits."""
+    """Find the product of several digits of an irrational number.
+
+    The irrational number that created when concatenating the positive
+    integers:
+
+        0.123456789101112131415161718192021...
+
+    Find d_1 * d_10 * d_100 * d_1000 * d_10000 * d_100000 * d_1000000.
+    """
     number = []
     for x in xrange(1000000):
         number += chars(x)
