@@ -566,8 +566,9 @@ def problem35(ulimit=int(1e6)):
     return len(cprimes)
 
 def problem36(ulimit=int(1e6)):
-    """Find all numbers less than `ulimit` which are palindromic in bases 10
-    and 2."""
+    """Find all numbers less than `ulimit` which are palindromic in
+    bases 10 and 2.
+    """
     return sum(x for x in xrange(ulimit) if
                     is_palindrome(x) and
                     is_palindrome(bin(x)[2:]))
