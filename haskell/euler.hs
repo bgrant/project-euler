@@ -94,6 +94,7 @@ collatzPairs llimit ulimit = [(n,collatzLen n) | n <- [llimit..ulimit]]
 maxPair :: [(Integer, Int)] -> (Integer, Int)
 maxPair xs = foldl1 (\x y -> if (snd x > snd y) then x else y) xs
 
+
 --------------
 -- Problems --
 --------------
