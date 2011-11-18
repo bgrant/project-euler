@@ -90,7 +90,7 @@ def collatz_sequence(n):
     yield n
 
 def collatz_lens():
-    """Yield the lengths of collatz sequences starting with 1"""
+    """Yield the lengths of collatz sequences starting with 1."""
     return (len(list(collatz_sequence(x))) for x in count(1))
 
 def triangle_ns():
