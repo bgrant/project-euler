@@ -572,17 +572,11 @@ def problem36(ulimit=int(1e6)):
                     is_palindrome(x) and
                     is_palindrome(bin(x)[2:]))
 
-def problem37_impl0(ulimit=int(1e6)):
-    """Find the sum of the only eleven primes that are both truncatable from
-    left to right and right to left."""
+def problem37(ulimit=int(1e6)):
+    """Find the sum of the only 11 primes that are both truncatable from
+    left to right and right to left.
+    """
     ps = set(primes(ulimit))
-    return sum(x for x in ps if set(truncations(x)).issubset(ps)
-                             and x not in set([2,3,5,7]))
-
-def problem37_impl1(ulimit=int(1e6)):
-    """Find the sum of the only 11 primes that are both truncatable from left
-    to right and right to left."""
-    ps = primes(ulimit)
     truncatable_ps = (x for x in ps if set(truncations(x)).issubset(ps)
                              and x not in set([2,3,5,7]))
     return sum(take(11, truncatable_ps))
