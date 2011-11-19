@@ -679,7 +679,7 @@ def problem345_impl0(m):
     elements in m such that each element is the only element is its own
     row and column.
 
-    Not fast enough.
+    TODO: Not yet fast enough.
     """
     nrows, ncols = m.shape
     rows = array(range(nrows))
@@ -753,6 +753,50 @@ def problem345_impl2(m):
             print count / nsums * 100, "% Done"
         count += 1
     return cached_max
+
+def problem345_impl3(m):
+    """Find the Matrix Sum of matrix `m`.
+
+    The Matrix Sum of a matrix m is defined as the maximum sum of matrix
+    elements in m such that each element is the only element is its own
+    row and column.
+
+    This implementation attempted to select the maximum algorithmically.
+    Unfortunately, it produces an incorrect solution.
+    """
+    maxvals = []
+    nrows, ncols = m.shape
+    while ncols > 0:
+        print m
+        col_max = m[:, 0].argmax()
+        row_max = m[col_max, :].argmax()
+        maxvals.append(m[col_max, row_max])
+        m = m.take(range(col_max) + range(col_max+1, nrows), axis=0)
+        m = m.take(range(row_max) + range(row_max+1, ncols), axis=1)
+        nrows, ncols = m.shape
+    return maxvals
+
+def problem345_impl4(m):
+    """Find the Matrix Sum of matrix `m`.
+
+    The Matrix Sum of a matrix m is defined as the maximum sum of matrix
+    elements in m such that each element is the only element is its own
+    row and column.
+
+    This implementation attempted to select the maximum algorithmically.
+    Unfortunately, it produces an incorrect solution.
+    """
+    maxvals = []
+    nrows, ncols = m.shape
+    while ncols > 0:
+        print m
+        maxvals.append(m.max())
+        row, col = (m == m.max()).nonzero()
+        m = m.take(range(row) + range(row+1, nrows), axis=0)
+        m = m.take(range(col) + range(col+1, ncols), axis=1)
+        nrows, ncols = m.shape
+    return maxvals
+
 
 ############
 ### Data ###
