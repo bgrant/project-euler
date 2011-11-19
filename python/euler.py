@@ -25,7 +25,7 @@ from __future__ import division
 from itertools import takewhile, dropwhile, islice, \
         count, permutations, chain, ifilter, groupby
 from math import sqrt, factorial, log
-from scipy import array, fliplr, arange, ones, nonzero #,zeros
+from scipy import array, fliplr, arange, ones, nonzero
 from scipy.linalg import toeplitz, circulant
 
 import english_numbers
