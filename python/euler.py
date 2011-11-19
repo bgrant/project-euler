@@ -23,7 +23,7 @@ Tested in Python 2.7.2.
 from __future__ import division
 
 from itertools import takewhile, dropwhile, islice, \
-        count, permutations, chain, ifilter
+        count, permutations, chain, ifilter, groupby
 from math import sqrt, factorial, log
 from scipy import array, fliplr, arange, ones, nonzero #,zeros
 from scipy.linalg import toeplitz, circulant
@@ -111,6 +111,27 @@ def divisors(n):
 def proper_divisors(n):
     """Yield all proper divisors (doesn't include n) by trial division."""
     return (x for x in xrange(1,n+1//2) if divides(x,n))
+
+def ndivisor_impl0(n):
+    """Compute the number of divisors of a number."""
+    return len(list(proper_divisors(n))) + 1
+
+def ndivisors_impl1(n):
+    """Return the number of divisors of a number.
+
+    Given a prime factorization of number
+        n = p1^c1 + p2^c2 + ... + pm^cm.
+
+    The number of divisors of a number is equal to
+        (c1 + 1) + (c2 + 1) + ... + (cm + 1).
+
+    From Wikipedia, `Highly Composite Number`.
+    """
+    cs = array([len(list(x[1])) for x in groupby(prime_factors(n))])
+    cs += 1
+    return cs.prod()
+
+ndivisors = ndivisors_impl1
 
 def rotations(n):
     """Yield all possible circular shifts of a string."""
