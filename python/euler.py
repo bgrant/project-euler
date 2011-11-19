@@ -106,7 +106,7 @@ def divides(x, n):
 
 def divisors(n):
     """Yield all divisors by trial division."""
-    return (x for x in xrange(1,n+1) if divides(x,n) == 0)
+    return (x for x in xrange(1,n+1) if divides(x,n))
 
 def proper_divisors(n):
     """Yield all proper divisors (doesn't include n) by trial division."""
