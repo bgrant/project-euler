@@ -446,10 +446,8 @@ def problem11():
 
 def problem12(lim=500):
     """Compute the first triangle number with over 500 divisors.
-
-    TODO: Not yet fast enough.
     """
-    return takefirst(lambda n: len(list(divisors(n))) > lim, triangle_ns())
+    return takefirst(lambda n: ndivisors(n) > lim, triangle_ns())
 
 def problem13():
     """Compute first 10 digits of sum of p13_data."""
