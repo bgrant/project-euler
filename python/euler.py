@@ -23,7 +23,7 @@ Tested in Python 2.7.2.
 from __future__ import division
 
 from itertools import takewhile, dropwhile, islice, \
-        count, permutations, chain, ifilter, groupby
+        count, permutations, chain, ifilter, groupby, cycle
 from math import sqrt, factorial, log
 from scipy import array, fliplr, arange, ones, nonzero
 from scipy.linalg import toeplitz, circulant
@@ -527,6 +527,69 @@ def problem18():
     tree = make_tree(p18_data)
     sum_paths(tree)
     return max(sums)
+
+def is_leap_year(year):
+    retval = False
+    if not divides(100, year):
+        if divides(4, year):
+            retval = True
+    else:
+        if divides(400, year):
+            retval = True
+    return retval
+
+def dates():
+    """Generate a dictionary {weekday, day, month, year} starting
+    Monday, 1 January 1900.
+    """
+    years = count(1900)
+    months = cycle(['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'])
+    daysinmonth = cycle([lambda year: 31,
+                   lambda year: 29 if is_leap_year(year) else 28,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31])
+    weekdays = cycle(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+        'Saturday', 'Sunday'])
+
+    year = years.next()
+    month = months.next()
+    weekday = weekdays.next()
+    days = (x for x in xrange(1,daysinmonth.next()(year)+1))
+    day = days.next()
+    while True:
+        yield {'weekday': weekday,
+               'year': year,
+               'month': month,
+               'day': day}
+        weekday = weekdays.next()
+        try:
+            day = days.next()
+        except(StopIteration):
+            days = (x for x in xrange(1,daysinmonth.next()(year)+1))
+            day = days.next()
+            month = months.next()
+            if month == 'January':
+                year = years.next()
+
+def problem19():
+    """Compute how many Sundays fell on the first of the month between
+    (1 Jan 1901 and 31 Dec 2000).
+    """
+    all_dates = dates()
+    all_dates = dropwhile(lambda date: date['year'] < 1901, all_dates)
+    date_range = takewhile(lambda date: date['year'] < 2001, all_dates)
+    return sum(1 for d in date_range if d['day'] == 1
+                                    and d['weekday'] == 'Sunday')
+
 
 def problem20():
     """Find sum of digits in 100!."""
