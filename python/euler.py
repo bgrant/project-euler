@@ -732,7 +732,7 @@ def problem56(ulimit=100):
     """Considering natural numbers of the form, a**b, where a, b <= 100,
     what is the maximum digital sum?
     """
-    return max(sum(digits(x**y)) for x in xrange(1,ulimit) 
+    return max(sum(digits(x**y)) for x in xrange(1,ulimit)
                                  for y in xrange(1,ulimit))
 
 def problem345_impl0(m):
