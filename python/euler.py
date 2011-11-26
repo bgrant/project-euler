@@ -22,13 +22,14 @@ Tested in Python 2.7.2.
 """
 from __future__ import division
 
-from itertools import takewhile, dropwhile, islice, \
+from itertools import takewhile, dropwhile, islice, imap,\
         count, permutations, chain, ifilter, groupby, cycle
 from math import sqrt, factorial, log
 from scipy import array, fliplr, arange, ones, nonzero
 from scipy.linalg import toeplitz, circulant
 
 import english_numbers
+import itertools
 
 __docformat__ = "restructuredtext en"
 
@@ -361,6 +362,20 @@ def pandigitals(n):
     digits = '987654321'
     for x in permutations(digits[len(digits)-n:]):
         yield cton(x)
+
+def is_abundant(n):
+    return sum(proper_divisors(n)) > n
+
+def abundants():
+    """Yield abundant numbers.
+
+    A number n is abundant if the sum of its proper divisors is greater
+    than n.
+
+    12 is the smallest abundant number:
+        1 + 2 + 3 + 4 + 6 = 16.
+    """
+    return (x for x in count(12) if is_abundant(x))
 
 ################
 ### Problems ###
@@ -700,6 +715,28 @@ def problem22():
         return sum(ord(x)-64 for x in name)
 
     return sum((index+1) * value(name) for index, name in enumerate(names))
+
+def problem23():
+    """Find the sum of all positive integers that aren't the sum of two
+    abundant numbers.
+
+    A number n is abundant if the sum of its proper divisors in less
+    than n.
+
+    12 is the smallest abundant number:
+        1 + 2 + 3 + 4 + 6 = 16.
+
+    Then, 24 is the smallest number that is the sum of two abundant
+    numbers.  All integers greater than 28123 are the sum of two
+    abundant numbers.
+
+    TODO: A little slow (143.10s).
+    """
+    ulimit = 28123
+    eligible = list(takewhile(lambda x: x < ulimit, abundants()))
+    sums_of_abundant = set(map(sum, itertools.product(eligible, eligible)))
+    not_sums = set(range(1,ulimit)) - sums_of_abundant
+    return sum(not_sums)
 
 def problem24(n=int(1e6)):
     """Find nth lexicographic permutation of 0123456789."""
