@@ -109,8 +109,9 @@ def divisors(n):
     return (x for x in xrange(1,n+1) if divides(x,n))
 
 def proper_divisors(n):
-    """Yield all proper divisors (doesn't include n) by trial division."""
-    return (x for x in xrange(1,n+1//2) if divides(x,n))
+    """Yield all proper divisors (doesn't include n) by trial
+    division."""
+    return chain((1,), (x for x in xrange(2,n+1//2) if divides(x,n)))
 
 def ndivisor_impl0(n):
     """Compute the number of divisors of a number."""
