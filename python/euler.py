@@ -488,6 +488,92 @@ def problem14_impl2(n=int(1e6)):
 
 problem14 = problem14_impl2
 
+problem15_npaths = 0
+problem15_done = False
+def problem15_impl0(side=20, progress=False):
+    """Find the number of paths from the top left to bottom right in a
+    20x20 grid.
+
+    Brute force approach - enumerate all the paths, aside from the
+    diagonal symmetry.  Ugly implementation with global variables.
+
+    TODO: Not yet fast enough.
+
+    Diagram:
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+        x x x x x x x x x x x x x x x x x x x x x
+
+       side = 2  3  4   5   6    7     8     9     10     11      12       13       14        15
+    lenpath = 4  6  8  10  12   14    16    18     20     22      24       26       28        30
+     npaths = 6 20 70 252 924 3432 12870 48620 184756 705432 2704156 10400600 40116600 155117520
+    time(s) =                       0.02  0.07   0.21   0.80    3.18    10.99    42.10    163.10
+    """
+    global problem15_npaths, problem15_done
+    problem15_npaths = 0
+    problem15_done = False
+    ulimit = side
+    def traverse_path(x=0, y=0):
+        global problem15_npaths, problem15_done
+        if x == ulimit and y == ulimit:
+            problem15_npaths += 1
+            if progress == True and divides(100000, problem15_npaths):
+                print problem15_npaths
+            return
+        if not problem15_done:
+            if x < ulimit:
+                traverse_path(x+1, y)
+            if x == 0 and y == 0:
+                problem15_done = True
+            if y < ulimit:
+                traverse_path(x, y+1)
+
+    traverse_path()
+    return problem15_npaths * 2
+
+def problem15_impl1(side_len=20, progress=False):
+    """Find the number of paths from the top left (0,0) to bottom right
+    (side_len, side_len) in a 20x20 grid.
+
+    Dynamic programming approach.
+    """
+    nverts = side_len + 1
+    cache = {}
+    cache[(nverts-1, nverts-1)] = 0
+    cache[(nverts-2, nverts-1)] = 1
+    cache[(nverts-1, nverts-2)] = 1
+    def count_paths(cache, x=0, y=0):
+        try:
+            return cache[(x, y)]
+        except(KeyError):
+            right_paths = count_paths(cache, x+1, y) if x < nverts else 0
+            down_paths  = count_paths(cache, x, y+1) if y < nverts else 0
+            cache[(x,y)] = right_paths + down_paths
+            cache[(y,x)] = cache[(x,y)] # by symmetry
+            return cache[(x, y)]
+
+    return count_paths(cache, 0, 0)
+
+problem15 = problem15_impl1
+
 def problem16():
     """Find sum of digits in 2**1000."""
     return sum(int(c) for c in str(2**1000))
