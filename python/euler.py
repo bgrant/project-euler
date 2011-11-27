@@ -947,6 +947,14 @@ def problem56(ulimit=100):
     return max(sum(digits(x**y)) for x in xrange(1,ulimit)
                                  for y in xrange(1,ulimit))
 
+def problem97():
+    """Find the last ten digits of the non-Mersenne prime.
+
+    TODO: Too slow (202.82s).
+    """
+    p = (28433 * (2**7830457)) + 1
+    return str(p)[-10:]
+
 def problem345_impl0(m):
     """Find the Matrix Sum of matrix `m`.
 
