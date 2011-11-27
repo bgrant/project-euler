@@ -22,14 +22,15 @@ Tested in Python 2.7.2.
 """
 from __future__ import division
 
+import itertools
+import decimal
+import english_numbers
+
 from itertools import takewhile, dropwhile, islice, imap,\
         count, permutations, chain, ifilter, groupby, cycle
 from math import sqrt, factorial, log
-from scipy import array, fliplr, arange, ones, nonzero
+from scipy import array, fliplr, arange, ones, zeros, nonzero
 from scipy.linalg import toeplitz, circulant
-
-import english_numbers
-import itertools
 
 __docformat__ = "restructuredtext en"
 
@@ -376,6 +377,53 @@ def abundants():
         1 + 2 + 3 + 4 + 6 = 16.
     """
     return (x for x in count(12) if is_abundant(x))
+
+def is_homogeneous(x):
+    """Is every element in the list equal to the first element?"""
+    return all([y==x[0] for y in x])
+
+def longest_recurring_subsequence(lst):
+    """Find the longest continually repeating subsequence of list `lst`.
+
+    There may be extraneous leading characters (and trailing, if length
+    of trailing characters is less than length of recurring sequence).
+    """
+    sublen = len(lst)//2
+    sarray = array(lst)
+    sview = sarray.view()
+    while sublen > 0:
+        truncated_len = len(sview) - (len(sview) % sublen)
+        group_array = sview[:truncated_len].reshape([-1, sublen])
+        if group_array.shape[0] < 2:
+            sview = sarray.view()
+            sublen -= 1
+            continue
+        if all(group_array[:,col] for col in is_homogeneous(group_array)):
+            return list(group_array[0])
+        sview = sview[1:]
+    return []
+
+def shortest_recurring_subsequence(lst):
+    """Find the shortest continually recurring subsequence in list
+    `lst`.
+
+    There may be extraneous leading characters (and trailing, if length
+    of trailing characters is less than length of recurring sequence).
+    """
+    sublen = 1
+    sarray = array(lst)
+    sview = sarray.view()
+    while sublen < len(sarray)+1//2:
+        truncated_len = len(sview) - (len(sview) % sublen)
+        group_array = sview[:truncated_len].reshape([-1, sublen])
+        if group_array.shape[0] < 2:
+            sview = sarray.view()
+            sublen += 1
+            continue
+        if all(is_homogeneous(col) for col in group_array.T):
+            return list(group_array[0])
+        sview = sview[1:]
+    return []
 
 ################
 ### Problems ###
@@ -747,6 +795,46 @@ def problem25(digits=1000):
     """Find first Fibonacci term to contain `digits` number of digits."""
     fibs = enumerate(fibonacci())
     return dropwhile(lambda x: ndigits(x[1]) < digits, fibs).next()[0] + 2
+
+def problem26_impl0(ulimit=1000, precision=20):
+    """Find the value of d such that d^-1 has the longest recurring
+    cycle of digits for all d < ulimit (for a fixed precision).
+    """
+    Dec = decimal.Decimal
+    decimal.getcontext().prec = precision
+    digit_strs = (chars(Dec(1)/Dec(x))[2:] for x in xrange (1,ulimit))
+    cycles = (shortest_recurring_subsequence(x) for x in digit_strs)
+    cycle_lens = (len(c) for c in cycles)
+    return array(list(cycle_lens), dtype=int).argmax() + 1
+
+def problem26_impl1(ulimit=1000, start_precision=10, progress=False):
+    """Find the value of d such that d^-1 has the longest recurring
+    cycle of digits for all d < ulimit.
+
+    For each 1/d, increase floating point precision until we find a
+    recurring sequence of digits or we find the end.  Then, return the
+    argmax.
+
+    TODO: Too slow (606.12s)
+    """
+    Dec = decimal.Decimal
+    decimal.getcontext().rounding = decimal.ROUND_FLOOR
+    decimal.getcontext().prec = start_precision
+    cycle_lens = zeros(ulimit, dtype=int)
+    for x in xrange(1,ulimit):
+        if progress: print x, ': ',
+        while cycle_lens[x] == 0:
+            digit_str = chars(Dec(1)/Dec(x))[2:]
+            cycle = shortest_recurring_subsequence(digit_str)
+            cycle_lens[x] = len(cycle)
+            if len(digit_str) < decimal.getcontext().prec:
+                break
+            decimal.getcontext().prec *= 2
+        decimal.getcontext().prec = start_precision
+        if progress: print cycle_lens[x]
+    return cycle_lens.argmax()
+
+problem26 = problem26_impl1
 
 def problem29(alimit=100, blimit=100):
     """Count all distinct terms in the sequence a**b s.t. 2 <= a <= 100
