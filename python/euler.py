@@ -26,7 +26,7 @@ import itertools
 import decimal
 import english_numbers
 
-from itertools import takewhile, dropwhile, islice, imap,\
+from itertools import takewhile, dropwhile, islice, imap, izip,\
         count, permutations, chain, ifilter, groupby, cycle
 from math import sqrt, factorial, log
 from scipy import array, fliplr, arange, ones, zeros, nonzero
@@ -424,6 +424,39 @@ def shortest_recurring_subsequence(lst):
             return list(group_array[0])
         sview = sview[1:]
     return []
+
+def spiral_positions(pos):
+    """Generate the coordinates in a 2-D spiral starting at position
+    `pos`, e.g. array([0,0]).
+    """
+    yield pos
+    #                            [  'r',   'd',    'l',    'u']
+    pos_mods = imap(array, cycle([(0,1), (1,0), (0,-1), (-1,0)]))
+    rng = 0
+    while True:
+        rng += 1
+        for _ in range(2):
+            pos_mod = pos_mods.next()
+            for _ in range(rng):
+                pos += pos_mod
+                yield pos
+
+def test_spiral_positions():
+    """Test the spiral_positions generator."""
+    ps = spiral_positions(array([0,0])) 
+    assert(all(ps.next() == (0,0)))
+    assert(all(ps.next() == (0,1)))
+    assert(all(ps.next() == (1,1)))
+    assert(all(ps.next() == (1,0)))
+    assert(all(ps.next() == (1,-1)))
+    assert(all(ps.next() == (0,-1)))
+    assert(all(ps.next() == (-1,-1)))
+    assert(all(ps.next() == (-1,0)))
+    assert(all(ps.next() == (-1,1)))
+    assert(all(ps.next() == (-1,2)))
+    assert(all(ps.next() == (0,2)))
+    assert(all(ps.next() == (1,2)))
+
 
 ################
 ### Problems ###
@@ -835,6 +868,23 @@ def problem26_impl1(ulimit=1000, start_precision=10, progress=False):
     return cycle_lens.argmax()
 
 problem26 = problem26_impl1
+
+def problem28(n=1001):
+    """Sum of diagonals in an n by n spiral."""
+    matrix = zeros([n,n], dtype=int)
+    mid = n//2
+    pos = array((mid,mid), dtype=int)
+    ps = spiral_positions(pos)
+    pos = ps.next()
+    value = count(1)
+    while True:
+        try:
+            matrix[pos[0],pos[1]] = value.next()
+            pos = ps.next()
+        except(IndexError):
+            break
+    return matrix.diagonal().sum() + fliplr(matrix).diagonal().sum() \
+            - matrix[mid, mid] # don't count center twice
 
 def problem29(alimit=100, blimit=100):
     """Count all distinct terms in the sequence a**b s.t. 2 <= a <= 100
