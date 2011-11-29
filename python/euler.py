@@ -558,7 +558,7 @@ def problem13():
 def problem14_impl0(n=int(1e6)):
     """Find longest Collatz sequence starting under 1e6.
 
-    TODO: Not yet fast enough.
+    Not fast enough.
     """
     maxind = 0
     maxlen = 0
@@ -598,7 +598,7 @@ def problem15_impl0(side=20, progress=False):
     Brute force approach - enumerate all the paths, aside from the
     diagonal symmetry.  Ugly implementation with global variables.
 
-    TODO: Not yet fast enough.
+    Not fast enough.
 
     Diagram:
         x x x x x x x x x x x x x x x x x x x x x
