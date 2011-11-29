@@ -1016,6 +1016,34 @@ def problem56(ulimit=100):
     return max(sum(digits(x**y)) for x in xrange(1,ulimit)
                                  for y in xrange(1,ulimit))
 
+def problem67():
+    """Find the maximal sum from top to bottom of the triangle in
+    triangle.txt.
+
+    Dynamic programming solution.
+    """
+    def load_data(fname='triangle.txt'):
+        """Load and parse 'triangle.txt."""
+        data = []
+        with open(fname) as f:
+            for line in f:
+                nums = line.strip().split(' ')
+                data.append([int(n) for n in nums])
+        return data
+
+    def max_sums(lvl0, lvl1):
+        """Given two levels of the triangle, return the maximum sum for
+        each path from lvl0 to lvl1.
+        """
+        return [max(lvl0[i] + lvl1[i], lvl0[i] + lvl1[i+1]) 
+                    for i in range(len(lvl0))]
+
+    data = reversed(load_data())
+    last_sums = data.next()
+    for level in data:
+        last_sums = max_sums(level, last_sums)
+    return last_sums[0]
+
 def problem97():
     """Find the last ten digits of the non-Mersenne prime.
 
