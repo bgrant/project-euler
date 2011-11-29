@@ -458,7 +458,7 @@ def spiral_positions(pos):
 
 def test_spiral_positions():
     """Test the spiral_positions generator."""
-    ps = spiral_positions(array([0,0])) 
+    ps = spiral_positions(array([0,0]))
     assert(all(ps.next() == (0,0)))
     assert(all(ps.next() == (0,1)))
     assert(all(ps.next() == (1,1)))
@@ -472,10 +472,62 @@ def test_spiral_positions():
     assert(all(ps.next() == (0,2)))
     assert(all(ps.next() == (1,2)))
 
-
 def digit_powers(x, n):
     """Generate d**n for each digit d in `x`."""
     return (x**n for x in digits(x))
+
+def is_leap_year(year):
+    retval = False
+    if not divides(100, year):
+        if divides(4, year):
+            retval = True
+    else:
+        if divides(400, year):
+            retval = True
+    return retval
+
+def dates():
+    """Generate a dictionary {weekday, day, month, year} starting
+    Monday, 1 January 1900.
+    """
+    years = count(1900)
+    months = cycle(['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'])
+    daysinmonth = cycle([lambda year: 31,
+                   lambda year: 29 if is_leap_year(year) else 28,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31,
+                   lambda year: 30,
+                   lambda year: 31])
+    weekdays = cycle(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+        'Saturday', 'Sunday'])
+
+    year = years.next()
+    month = months.next()
+    weekday = weekdays.next()
+    days = (x for x in xrange(1,daysinmonth.next()(year)+1))
+    day = days.next()
+    while True:
+        yield {'weekday': weekday,
+               'year': year,
+               'month': month,
+               'day': day}
+        weekday = weekdays.next()
+        try:
+            day = days.next()
+        except(StopIteration):
+            days = (x for x in xrange(1,daysinmonth.next()(year)+1))
+            day = days.next()
+            month = months.next()
+            if month == 'January':
+                year = years.next()
+
 
 
 ################
@@ -731,58 +783,6 @@ def problem18():
     sum_paths(tree)
     return max(sums)
 
-def is_leap_year(year):
-    retval = False
-    if not divides(100, year):
-        if divides(4, year):
-            retval = True
-    else:
-        if divides(400, year):
-            retval = True
-    return retval
-
-def dates():
-    """Generate a dictionary {weekday, day, month, year} starting
-    Monday, 1 January 1900.
-    """
-    years = count(1900)
-    months = cycle(['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'])
-    daysinmonth = cycle([lambda year: 31,
-                   lambda year: 29 if is_leap_year(year) else 28,
-                   lambda year: 31,
-                   lambda year: 30,
-                   lambda year: 31,
-                   lambda year: 30,
-                   lambda year: 31,
-                   lambda year: 31,
-                   lambda year: 30,
-                   lambda year: 31,
-                   lambda year: 30,
-                   lambda year: 31])
-    weekdays = cycle(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
-        'Saturday', 'Sunday'])
-
-    year = years.next()
-    month = months.next()
-    weekday = weekdays.next()
-    days = (x for x in xrange(1,daysinmonth.next()(year)+1))
-    day = days.next()
-    while True:
-        yield {'weekday': weekday,
-               'year': year,
-               'month': month,
-               'day': day}
-        weekday = weekdays.next()
-        try:
-            day = days.next()
-        except(StopIteration):
-            days = (x for x in xrange(1,daysinmonth.next()(year)+1))
-            day = days.next()
-            month = months.next()
-            if month == 'January':
-                year = years.next()
-
 def problem19():
     """Compute how many Sundays fell on the first of the month between
     (1 Jan 1901 and 31 Dec 2000).
@@ -1021,8 +1021,7 @@ def problem42():
     return sum(1 for n in nums if n in possible_triangles)
 
 def problem45(llimit=40755):
-    """
-    Find the first triangle number greater than `llimit` that is also
+    """Find the first triangle number greater than `llimit` that is also
     pentagonal and hexagonal.
 
     Though algebra we can show that all hexagonal numbers are
@@ -1097,7 +1096,7 @@ def problem67():
         """Given two levels of the triangle, return the maximum sum for
         each path from lvl0 to lvl1.
         """
-        return [max(lvl0[i] + lvl1[i], lvl0[i] + lvl1[i+1]) 
+        return [max(lvl0[i] + lvl1[i], lvl0[i] + lvl1[i+1])
                     for i in range(len(lvl0))]
 
     data = reversed(load_data())
