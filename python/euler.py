@@ -95,16 +95,27 @@ def collatz_lens():
     """Yield the lengths of collatz sequences starting with 1."""
     return (len(list(collatz_sequence(x))) for x in count(1))
 
-def triangle_ns():
+def triangle_ns_impl0():
+    """Generate the triangle numbers starting with 1."""
     total = 0
     ns = count(1)
     while True:
         total += ns.next()
         yield total
 
-def nth_triangle_n(n):
-    """Return the `n`th triangle number."""
-    return int((1/2) * n * (n+1))
+def triangle_ns_impl1():
+    """Generate the triangle numbers starting with `start`."""
+    return (int((1/2)*n*(n+1)) for n in count(1))
+
+triangle_ns = triangle_ns_impl1
+
+def pentagonal_ns():
+    """Generate the hexagonal numbers starting with `start`."""
+    return (int(n*(3*n - 1)/2) for n in count(1))
+
+def hexagonal_ns():
+    """Generate the hexagonal numbers starting with `start`."""
+    return (int(n*(2*n - 1)) for n in count(1))
 
 def divides(x, n):
     """Return if n%x == 0."""
@@ -1008,6 +1019,34 @@ def problem42():
     maxval = max(nums)
     possible_triangles = set(takewhile(lambda x: x<=maxval, triangle_ns()))
     return sum(1 for n in nums if n in possible_triangles)
+
+def problem45(llimit=40755):
+    """
+    Find the first triangle number greater than `llimit` that is also
+    pentagonal and hexagonal.
+
+    Though algebra we can show that all hexagonal numbers are
+    triangular: specifically, the ith hexagonal number is equal to the
+    (2*i-1)th triangle number.  Thus, we only have to look for a
+    hexagonal number that is also pentagonal.
+    """
+    def tph_numbers():
+        """Generate numbers that are both hexagonal and pentagonal (and
+        incidentally triangular.
+        """
+        hs = hexagonal_ns()
+        ps = pentagonal_ns()
+        while True:
+            h = hs.next()
+            p = ps.next()
+            while not (h == p):
+                if p < h:
+                    p = ps.next()
+                elif h < p:
+                    h = hs.next()
+            yield h
+
+    return takefirst(lambda x: x > llimit, tph_numbers())
 
 def problem48(ulimit=1000):
     """Compute the sum of 1**1, 2**2, ... `ulimit`**`ulimit`."""
