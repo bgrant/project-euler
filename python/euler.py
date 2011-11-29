@@ -961,6 +961,24 @@ def problem37(ulimit=int(1e6)):
                              and x not in set([2,3,5,7]))
     return sum(take(11, truncatable_ps))
 
+def problem39(ulimit=1001):
+    """For all triangles with integral side lengths and integral
+    perimeter < `ulimit`, find the perimeter with the maximum number of
+    possible triangles {a,b,c}.
+    """
+    triangles = []
+    for a in xrange(1,ulimit):
+        for b in xrange(1,a):
+            c = int(sqrt(a**2 + b**2))
+            if (a**2 + b**2 == c**2):
+                total = sum([a,b,c])
+                if total < ulimit:
+                    triangles.append( ((a,b,c), total) )
+    triangles.sort(key=lambda x: x[1])
+    groups = groupby(triangles, lambda x: x[1])
+    counts = [(len(list(x[1])), x[0]) for x in groups]
+    return max(counts, key=lambda x: x[0])[1]
+
 def problem40():
     """Find the product of several digits of an irrational number.
 
