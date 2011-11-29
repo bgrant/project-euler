@@ -458,6 +458,10 @@ def test_spiral_positions():
     assert(all(ps.next() == (1,2)))
 
 
+def digit_powers(x, n):
+    """Generate d**n for each digit d in `x`."""
+    return (x**n for x in digits(x))
+
 ################
 ### Problems ###
 ################
@@ -892,6 +896,21 @@ def problem29(alimit=100, blimit=100):
     """
     return len(set(a**b for a in xrange(2,alimit+1) for b in
                                  xrange(2,blimit+1)))
+
+def problem30(n=5):
+    """Find the sum of the numbers that can be written as the 5th power
+    of their digits.
+
+    The range of the sum(digit_powers(x,n)) for a given number of digits
+    d is 1 (a 1 followed by d-1 zeros) to sum(digit_powers("d nines", n)).
+    Upper bound on search is the least "1 followed by d zeros" where
+        sum(digit_powers("d nines", n)) < "1 followed by d zeros".
+    """
+    ulimit = 100
+    while sum(digit_powers(ulimit-1,n)) >= ulimit:
+        ulimit = ulimit*10
+    nums = (x for x in xrange(10,ulimit+1) if sum(digit_powers(x,n)) == x)
+    return sum(nums)
 
 def problem34(ulimit=int(1e5)):
     """Find the sum of all numbers equal to the sum of the factorial of their
