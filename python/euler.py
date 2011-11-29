@@ -102,6 +102,10 @@ def triangle_ns():
         total += ns.next()
         yield total
 
+def nth_triangle_n(n):
+    """Return the `n`th triangle number."""
+    return int((1/2) * n * (n+1))
+
 def divides(x, n):
     """Return if n%x == 0."""
     return n % x == 0
@@ -461,6 +465,7 @@ def test_spiral_positions():
 def digit_powers(x, n):
     """Generate d**n for each digit d in `x`."""
     return (x**n for x in digits(x))
+
 
 ################
 ### Problems ###
@@ -985,6 +990,24 @@ def problem41_impl1(num_digits=9):
             continue
 
 problem41 = problem41_impl1
+
+def problem42():
+    """Find how many triangle words are in 'words.txt'.
+
+    A word is a triangle word if the sum of the alphanumeric positions
+    of its characters is a triangle number.
+    """
+    def load_words(fname='words.txt'):
+        with open(fname) as f:
+            return eval('[' + f.next() + ']')
+
+    def value(word):
+        return sum(ord(c)-64 for c in word)
+
+    nums = map(value, load_words())
+    maxval = max(nums)
+    possible_triangles = set(takewhile(lambda x: x<=maxval, triangle_ns()))
+    return sum(1 for n in nums if n in possible_triangles)
 
 def problem48(ulimit=1000):
     """Compute the sum of 1**1, 2**2, ... `ulimit`**`ulimit`."""
