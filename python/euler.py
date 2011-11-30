@@ -185,7 +185,9 @@ def is_prime(n):
         return False
 
     # Quick filters
-    if n in known_primes:
+    if n < 2:
+        return False
+    elif n in known_primes:
         return True
     elif divisible_by_known_prime(n):
         return False
@@ -888,6 +890,23 @@ def problem26_impl1(ulimit=1000, start_precision=10, progress=False):
     return cycle_lens.argmax()
 
 problem26 = problem26_impl1
+
+def problem27(limit=1000, progress=False):
+    """Find the product of the coefficients a and b for the quadratic
+    expression that produces the maximum number of primes for
+    consecutive values of n, starting with n = 0.
+    """
+    maximum = 0
+    coeffs = (None, None)
+    for a in xrange(-limit+1, limit):
+        if progress: print a
+        for b in xrange(-limit+1, limit):
+            quadratics = (n**2 + a*n + b for n in count(0))
+            nprimes = len(list(takewhile(is_prime, quadratics)))
+            if nprimes > maximum:
+                maximum = nprimes
+                coeffs = (a,b)
+    return coeffs[0] * coeffs[1]
 
 def problem28(n=1001):
     """Sum of diagonals in an n by n spiral."""
