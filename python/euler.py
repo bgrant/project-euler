@@ -947,6 +947,36 @@ def problem30(n=5):
     nums = (x for x in xrange(10,ulimit+1) if sum(digit_powers(x,n)) == x)
     return sum(nums)
 
+def problem32(progress=False):
+    """Find the sum of all products whose multiplicand / multiplier /
+    product identity can be written as a 1 through 9 pandigital.
+    """
+
+    def three_groupings(lst):
+        """Generate partitions of `lst` into three groups.
+
+        Only 4 and 5 digit products satisfy the constraints for this
+        problem (found by playing with ndigits in each group and seeing
+        ndigits in product).
+        """
+        return ((lst[:a], lst[a:b], lst[b:])
+                    for b in xrange(4,6)
+                    for a in xrange(1,b))
+
+    def is_valid(lst):
+        """Given a list of [multiplicand, multiplier, product],
+        determine if multiplicand * multiplier = product.
+        """
+        return lst[0] * lst[1] == lst[2]
+
+    products = set()
+    for pan in pandigitals(9):
+        if progress: print pan
+        eqns = (map(cton,lst) for lst in three_groupings(chars(pan)))
+        valid_products = (eqn[2] for eqn in eqns if is_valid(eqn))
+        products = products.union(set(valid_products))
+    return sum(products)
+
 def problem34(ulimit=int(1e5)):
     """Find the sum of all numbers equal to the sum of the factorial of their
     digits."""
