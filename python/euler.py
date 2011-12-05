@@ -26,7 +26,7 @@ import itertools
 import decimal
 import english_numbers
 
-from itertools import takewhile, dropwhile, islice, imap, izip,\
+from itertools import takewhile, dropwhile, islice, imap,\
         count, permutations, chain, ifilter, groupby, cycle
 from math import sqrt, factorial, log
 from scipy import array, fliplr, arange, ones, zeros, nonzero
