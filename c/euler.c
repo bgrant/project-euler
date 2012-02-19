@@ -25,6 +25,10 @@
 #include <assert.h>
 #include <string.h>
 
+
+/*****************************************************************************/
+/* Declarations                                                              */
+/*****************************************************************************/
 bool is_prime(unsigned long composite);
 void test_is_prime(void);
 
@@ -55,9 +59,9 @@ int problem8_data[];
 const bool DEBUG = false;
 
 
-/*********************/
-/* Utility functions */
-/*********************/
+/*****************************************************************************/
+/* Utility functions                                                         */
+/*****************************************************************************/
 
 // Test primality by trial division
 bool is_prime(unsigned long n) {
@@ -227,9 +231,9 @@ void test_is_palindrome() {
 }
 
 
-/************/
-/* Problems */
-/************/
+/*****************************************************************************/
+/* Problems                                                                  */
+/*****************************************************************************/
 
 // Find the sum of all the multiple of 3 or 5 below 1000.
 int problem1(void) {
@@ -346,6 +350,8 @@ unsigned long problem7(void) {
     return nth_prime(PRIME_INDEX);
 }
 
+// Find the greatest product of five consecutive digits in the
+// 1000-digit number (problem8_data).
 int problem8(void) {
     int *d = problem8_data;
     int max_product, product = 1;
@@ -398,9 +404,9 @@ int main() {
 }
 
 
-/********/
-/* Data */
-/********/
+/*****************************************************************************/
+/* Data                                                                      */
+/*****************************************************************************/
 
 int problem8_data[] = {
     7,3,1,6,7,1,7,6,5,3,1,3,3,0,6,2,4,9,1,9,2,2,5,1,1,9,6,7,4,4,2,6,5,7,4,7,4,2,3,5,5,3,4,9,1,9,4,9,3,4,
