@@ -1,12 +1,12 @@
 """
-`Project Euler <http://www.projecteuler.net>`_ solutions in Python.
+Project Euler <http://www.projecteuler.net> solutions in Python.
 
 Tested in Python 2.7.2.
 
 :author: Robert David Grant <robert.david.grant@gmail.com>
 
 :copyright:
-    Copyright 2011 Robert David Grant.
+    Copyright 2012 Robert David Grant.
 
     Licensed under the Apache License, Version 2.0 (the "License"); you
     may not use this file except in compliance with the License.  You
