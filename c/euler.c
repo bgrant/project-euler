@@ -174,6 +174,118 @@ void test_nth_prime() {
 /* Problems */
 /************/
 
+const bool DEBUG = false;
+
+
+/*********************/
+/* Utility functions */
+/*********************/
+
+// Test primality by trial division
+bool is_prime(unsigned long n) {
+    switch(n) {
+        case 0:
+        case 1:
+            return false;
+        case 2:
+        case 3:
+            return true;
+        default:
+            if (n % 2 == 0)
+                return false;
+            for (int i=3; i <= ceil(sqrt(n)); i+=2) {
+                if (n % i == 0)
+                    return false;
+            }
+            return true;
+    }
+}
+
+void test_is_prime() {
+    int primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 101,
+        0};
+    int composites[] = {4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 100,
+        0};
+    for (int i=0; primes[i]; ++i) {
+//        printf("%d: %d\n", primes[i], is_prime(primes[i]));
+        assert(is_prime(primes[i]));
+    }
+    for (int i=0; composites[i]; ++i) {
+//        printf("%d: %d\n", composites[i], is_prime(composites[i]));
+        assert(!is_prime(composites[i]));
+    }
+}
+
+// Upper bound for prime counting function for n>1
+// From Wikipedia: Prime-counting function
+int max_nprimes_below(unsigned long n) {
+    return ceil(1.25506 * (n / log(n)));
+}
+
+// Fills array 'primes' with of primes < n, terminates with a 0
+// Returns nprimes
+// Uses Sieve of Eratosthenes
+int prime_sieve(unsigned long n, unsigned long * primes) {
+
+    // indicates if pmask[i] is prime
+    bool * pmask = malloc(sizeof(bool)*n);
+
+    // initialize pmask
+    for (unsigned long i=0; i < n; ++i)
+        pmask[i] = true;
+
+    // mark all non-primes false, using Sieve of Eratosthenes
+    pmask[0] = pmask[1] = false;
+    for (unsigned long i=2; i < n; ++i) {
+        if (!pmask[i]) {
+            continue;
+        }
+        if (DEBUG) { printf("%ld: ", i); }
+        for (unsigned long j=i+i; j < n; j+=i) {
+            if (DEBUG) { printf("%ld ", j); }
+            pmask[j] = false;
+        }
+        if (DEBUG) { printf("\n"); }
+    }
+
+    // fill the primes array with known primes
+    unsigned long pindex = 0;
+    for (unsigned long i=2; i < n; ++i) {
+        if (pmask[i]) {
+            primes[pindex] = i;
+            ++pindex;
+        }
+    }
+    primes[pindex] = 0; // 0 terminate
+    free(pmask);
+    return(pindex);
+}
+
+void test_prime_sieve() {
+    const int N = 44;
+    unsigned long known_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37,
+        41, 43, 0}; // 0 terminated
+    unsigned long * primes = malloc(sizeof(unsigned long) *
+            (max_nprimes_below(N) + 1));
+    unsigned long nprimes = 0;
+
+    printf("Testing prime number sieve...\n");
+    nprimes = prime_sieve(N, primes);
+    assert(nprimes == 14);
+
+    for (int i=0; primes[i]; ++i) {
+        printf("%ld == %ld\n", primes[i], known_primes[i]);
+        assert(primes[i] == known_primes[i]);
+    }
+
+    free(primes);
+}
+
+
+/************/
+/* Problems */
+/************/
+
 // Find the sum of all the multiple of 3 or 5 below 1000.
 int problem1(void) {
     const int ULIMIT = 1000;
