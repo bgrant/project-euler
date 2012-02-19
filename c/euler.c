@@ -6,26 +6,27 @@
 #include <string.h>
 
 bool is_prime(unsigned long composite);
-void test_is_prime();
+void test_is_prime(void);
 
 int max_nprimes_below(unsigned long n);
 unsigned long nth_prime_upper_bound(int n);
 
 unsigned long nth_prime(int n);
-void test_nth_prime();
+void test_nth_prime(void);
 
 int prime_sieve(unsigned long n, unsigned long * primes);
-void test_prime_sieve();
+void test_prime_sieve(void);
 
 bool is_palindrome(const unsigned long num);
 void test_is_palindrome(void);
 
-int problem1(void);
-int problem2(void);
+int           problem1(void);
+int           problem2(void);
 unsigned long problem3(void);
 unsigned long problem4(void);
-int problem5(void);
-int problem6(void);
+int           problem5(void);
+int           problem6(void);
+unsigned long problem7(void);
 unsigned long problem10(void);
 
 const bool DEBUG = false;
@@ -315,6 +316,12 @@ int problem6(void) {
     return(sum*sum - sum_of_squares);
 }
 
+// Find the 10001st prime.
+unsigned long problem7(void) {
+    const int PRIME_INDEX = 10000;
+    return nth_prime(PRIME_INDEX);
+}
+
 // Find the sum of all primes below two million.
 unsigned long problem10(void) {
     const unsigned long ULIMIT = 2000000;
@@ -326,12 +333,6 @@ unsigned long problem10(void) {
         sum += primes[i];
     }
     return sum;
-}
-
-// Find the 10001st prime.
-unsigned long problem7(void) {
-    const int PRIME_INDEX = 10000;
-    return nth_prime(PRIME_INDEX);
 }
 
 int main() {
