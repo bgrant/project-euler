@@ -8,6 +8,10 @@ bool is_prime(unsigned long composite);
 void test_is_prime();
 
 int max_nprimes_below(unsigned long n);
+unsigned long nth_prime_upper_bound(int n);
+
+unsigned long nth_prime(int n);
+void test_nth_prime();
 
 int prime_sieve(unsigned long n, unsigned long * primes);
 void test_prime_sieve();
@@ -17,6 +21,7 @@ int problem2(void);
 unsigned long problem3(void);
 int problem5(void);
 int problem6(void);
+unsigned long problem10(void);
 
 const bool DEBUG = false;
 
@@ -60,10 +65,21 @@ void test_is_prime() {
     }
 }
 
-// Upper bound for prime counting function for n>1
+// Upper bound for prime counting function
 // From Wikipedia: Prime-counting function
 int max_nprimes_below(unsigned long n) {
-    return ceil(1.25506 * (n / log(n)));
+    if (n < 2) {
+        return 0;
+    } else {
+        return ceil(1.25506 * (n / log(n)));
+    }
+}
+
+// Upper bound for the nth prime, for n >= 6
+// From Wikipedia: Prime-counting function
+unsigned long nth_prime_upper_bound(int n) {
+    n += 1; // this formula uses 1-based indexing
+    return ceil(n*(log(n) + log(log(n))));
 }
 
 // Fills array 'primes' with of primes < n, terminates with a 0
@@ -109,9 +125,9 @@ void test_prime_sieve() {
     const int N = 44;
     unsigned long known_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37,
         41, 43, 0}; // 0 terminated
+    unsigned long nprimes = 0;
     unsigned long * primes = malloc(sizeof(unsigned long) *
             (max_nprimes_below(N) + 1));
-    unsigned long nprimes = 0;
 
     printf("Testing prime number sieve...\n");
     nprimes = prime_sieve(N, primes);
@@ -125,6 +141,34 @@ void test_prime_sieve() {
     free(primes);
 }
 
+unsigned long nth_prime(int n) {
+    unsigned long answer = 0;
+    unsigned long ulimit = -1;
+    unsigned long * primes;
+
+    if (n < 7) {
+        ulimit = 20;
+    } else {
+        ulimit = nth_prime_upper_bound(n);
+    }
+    //printf("%ld, ", ulimit);
+    primes = malloc(sizeof(unsigned long) * (max_nprimes_below(ulimit) + 1));
+
+    prime_sieve(ulimit, primes);
+    answer = primes[n];
+    free(primes);
+
+    return answer;
+}
+
+void test_nth_prime() {
+    unsigned long known_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37,
+        41, 43, 0}; // 0 terminated
+    for (int i=0; known_primes[i]; ++i) {
+        //printf("%d: %ld\n", i, nth_prime(i));
+        assert(nth_prime(i) == known_primes[i]);
+    }
+}
 
 /************/
 /* Problems */
@@ -166,14 +210,17 @@ unsigned long problem3(void) {
     unsigned long * primes = malloc(sizeof(unsigned long) *
             (max_nprimes_below(ulimit) + 1));
     unsigned long nprimes = 0;
+    unsigned long retval = 0;
 
     nprimes = prime_sieve(ulimit, primes);
     for (int i = nprimes-1; i >= 0; --i) {
-        if (NUM % primes[i] == 0)
-            return primes[i];
+        if (NUM % primes[i] == 0) {
+            retval = primes[i];
+            break;
+        }
     }
-
-    return -1; // no prime factor found
+    free(primes);
+    return retval;
 }
 
 // Find the smallest number evenly divisible by all the numbers from 1
@@ -208,7 +255,26 @@ int problem6(void) {
     return(sum*sum - sum_of_squares);
 }
 
+// Find the sum of all primes below two million.
+unsigned long problem10(void) {
+    const unsigned long ULIMIT = 2000000;
+    unsigned long * primes = malloc(sizeof(unsigned long) *
+            (max_nprimes_below(ULIMIT) + 1));
+    unsigned long sum = 0;
+    prime_sieve(ULIMIT, primes);
+    for (int i=0; primes[i]; ++i) {
+        sum += primes[i];
+    }
+    return sum;
+}
+
+// Find the 10001st prime.
+unsigned long problem7(void) {
+    const int PRIME_INDEX = 10000;
+    return nth_prime(PRIME_INDEX);
+}
+
 int main() {
-    printf("%ld\n", problem3());
+    printf("%ld\n", problem10());
     return(0);
 }
