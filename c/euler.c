@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <assert.h>
+#include <string.h>
 
 bool is_prime(unsigned long composite);
 void test_is_prime();
@@ -16,9 +17,13 @@ void test_nth_prime();
 int prime_sieve(unsigned long n, unsigned long * primes);
 void test_prime_sieve();
 
+bool is_palindrome(const unsigned long num);
+void test_is_palindrome(void);
+
 int problem1(void);
 int problem2(void);
 unsigned long problem3(void);
+unsigned long problem4(void);
 int problem5(void);
 int problem6(void);
 unsigned long problem10(void);
@@ -223,6 +228,61 @@ unsigned long problem3(void) {
     return retval;
 }
 
+bool is_palindrome(const unsigned long num) {
+    char num_str[10];
+    int num_len = 0;
+    snprintf(num_str, 10*sizeof(char), "%lu", num);
+    num_len = strlen(num_str);
+    for (int i=0; i < floor(num_len/2); ++i) {
+        if (num_str[i] != num_str[num_len-i-1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void test_is_palindrome() {
+    assert(is_palindrome(90909));
+    assert(is_palindrome(11111));
+    assert(is_palindrome(19191));
+    assert(is_palindrome(2222));
+    assert(is_palindrome(363));
+    assert(is_palindrome(44));
+    assert(is_palindrome(5));
+    assert(!is_palindrome(987654));
+    assert(!is_palindrome(98765));
+    assert(!is_palindrome(954));
+    assert(!is_palindrome(21));
+}
+
+// Find the largest palindrome made from the product of two 3-digit numbers.
+unsigned long problem4(void) {
+    const int NPRODS = 99*(99+1)/2;
+    unsigned long products[NPRODS];
+    int index = 0;
+
+    // Calculate products
+    for (int i=900; i < 1000; ++i) {
+        for (int j=i+1; j < 1000; ++j) {
+            assert(index < NPRODS);
+            products[index] = i*j;
+            ++index;
+        }
+    }
+
+    // Find max palindrome; linear scan
+    unsigned long max_palindrome = 0;
+    for (int i=0; i < NPRODS; ++i) {
+        if (is_palindrome(products[i])) {
+            if (products[i] > max_palindrome) {
+                max_palindrome = products[i];
+            }
+            if (DEBUG) printf("%lu\n", products[i]);
+        }
+    }
+    return max_palindrome;
+}
+
 // Find the smallest number evenly divisible by all the numbers from 1
 // to 20.
 int problem5(void) {
@@ -275,6 +335,6 @@ unsigned long problem7(void) {
 }
 
 int main() {
-    printf("%ld\n", problem10());
+    printf("%lu\n", problem4());
     return(0);
 }
