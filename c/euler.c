@@ -179,6 +179,34 @@ void test_nth_prime() {
     }
 }
 
+bool is_palindrome(const unsigned long num) {
+    char num_str[10];
+    int num_len = 0;
+    snprintf(num_str, 10*sizeof(char), "%lu", num);
+    num_len = strlen(num_str);
+    for (int i=0; i < floor(num_len/2); ++i) {
+        if (num_str[i] != num_str[num_len-i-1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void test_is_palindrome() {
+    assert(is_palindrome(90909));
+    assert(is_palindrome(11111));
+    assert(is_palindrome(19191));
+    assert(is_palindrome(2222));
+    assert(is_palindrome(363));
+    assert(is_palindrome(44));
+    assert(is_palindrome(5));
+    assert(!is_palindrome(987654));
+    assert(!is_palindrome(98765));
+    assert(!is_palindrome(954));
+    assert(!is_palindrome(21));
+}
+
+
 /************/
 /* Problems */
 /************/
@@ -230,33 +258,6 @@ unsigned long problem3(void) {
     }
     free(primes);
     return retval;
-}
-
-bool is_palindrome(const unsigned long num) {
-    char num_str[10];
-    int num_len = 0;
-    snprintf(num_str, 10*sizeof(char), "%lu", num);
-    num_len = strlen(num_str);
-    for (int i=0; i < floor(num_len/2); ++i) {
-        if (num_str[i] != num_str[num_len-i-1]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-void test_is_palindrome() {
-    assert(is_palindrome(90909));
-    assert(is_palindrome(11111));
-    assert(is_palindrome(19191));
-    assert(is_palindrome(2222));
-    assert(is_palindrome(363));
-    assert(is_palindrome(44));
-    assert(is_palindrome(5));
-    assert(!is_palindrome(987654));
-    assert(!is_palindrome(98765));
-    assert(!is_palindrome(954));
-    assert(!is_palindrome(21));
 }
 
 // Find the largest palindrome made from the product of two 3-digit numbers.
