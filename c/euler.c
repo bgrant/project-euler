@@ -28,6 +28,7 @@ int           problem5(void);
 int           problem6(void);
 unsigned long problem7(void);
 int           problem8(void);
+int           problem9(void);
 unsigned long problem10(void);
 
 int problem8_data[];
@@ -336,6 +337,27 @@ int problem8(void) {
     return max_product;
 }
 
+// There exists exactly one Pythagorean triplet for which a + b + c =
+// 1000.  Find the product abc.
+int problem9(void) {
+    int target = 1000;
+    int c = 1;
+    int cc = 1;
+    for (int a=1; a < target; ++a) {
+        for (int b=a+1; b < target; ++b) {
+            cc = a*a + b*b;
+            c = round(sqrt(cc));
+            if ((c > b) && (a+b+c == target) && (c*c == cc)) {
+                if (DEBUG) {
+                    printf("%d + %d + %d = %d\n", a, b, c, a+b+c);
+                }
+                return a*b*c;
+            }
+        }
+    }
+    return 0;
+}
+
 // Find the sum of all primes below two million.
 unsigned long problem10(void) {
     const unsigned long ULIMIT = 2000000;
@@ -350,7 +372,7 @@ unsigned long problem10(void) {
 }
 
 int main() {
-    printf("%d\n", problem8());
+    printf("%lu\n", problem10());
     return(0);
 }
 
