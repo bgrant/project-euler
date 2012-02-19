@@ -44,6 +44,9 @@ void test_prime_sieve(void);
 bool is_palindrome(const unsigned long num);
 void test_is_palindrome(void);
 
+int word_value(const char * word);
+void test_word_value(void);
+
 int           problem1(void);
 int           problem2(void);
 unsigned long problem3(void);
@@ -54,6 +57,7 @@ unsigned long problem7(void);
 int           problem8(void);
 int           problem9(void);
 unsigned long problem10(void);
+unsigned long problem22(void);
 
 int problem8_data[];
 const bool DEBUG = false;
@@ -230,6 +234,30 @@ void test_is_palindrome() {
     assert(!is_palindrome(21));
 }
 
+// Find value of a string (sum of values of its letters)
+// Value of a letter is its 1-based position in the alphabet:
+// A=1, B=2, etc.
+int word_value(const char * word) {
+    int sum = 0;
+    for (int i=0; word[i]; ++i) {
+        sum += (int)word[i] - 64;
+    }
+    return sum;
+}
+
+void test_word_value(void) {
+    char str[2];
+    int i=1;
+    int val=0;
+    for (char c='A'; c <='Z'; ++c) {
+        sprintf(str, "%c", c);
+        val = word_value(str);
+        if (DEBUG) printf("%d\n", val);
+        assert(val == i++);
+    }
+    assert(word_value("COLIN") == 53);
+}
+
 
 /*****************************************************************************/
 /* Problems                                                                  */
@@ -398,8 +426,48 @@ unsigned long problem10(void) {
     return sum;
 }
 
+// What is the total of all the name scores in the file?
+// A name score is calculated as:
+// (alphanumeric_word_value * position_in_sorted_wordlist)
+unsigned long problem22(void) {
+    const unsigned int NCHARS = 46448; // counted in vim
+    const unsigned int NWORDS = 5163;  // counted in vim
+    const unsigned int MAX_WORDLENGTH = 20;
+    FILE *fh;
+    char str[NCHARS], *word;
+    char words[NWORDS][MAX_WORDLENGTH];
+    int words_ix = 0;
+
+    if ((fh = fopen("names.txt", "r"))) {
+
+        // read the file
+        fgets(str, NCHARS*sizeof(char), fh); // file is only one line
+        fclose(fh);
+
+        // tokenize, parse, and put words into an array
+        word = strtok(str, ",");
+        do {
+            word += 1; // chop off leading "
+            word[strlen(word)-1] = '\0'; //chop off tailing "
+            strncpy(words[words_ix++], word, MAX_WORDLENGTH);
+        } while ((word = strtok(NULL, ",")));
+
+        // sort the list
+        qsort(words, NWORDS, MAX_WORDLENGTH, (int(*)(const void*, const void*))strcmp);
+
+        // calculate and sum the word scores
+        unsigned long total = 0;
+        for (int i=0; i < NWORDS; ++i) {
+            total += (i+1) * word_value(words[i]);
+        }
+
+        return total;
+    }
+    return -1; // couldn't read the file
+}
+
 int main() {
-    printf("%lu\n", problem10());
+    printf("%lu\n", problem22());
     return(0);
 }
 
