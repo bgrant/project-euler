@@ -468,6 +468,7 @@ unsigned long problem10() {
     for (int i=0; primes[i]; ++i) {
         sum += primes[i];
     }
+    free(primes);
     return sum;
 }
 
