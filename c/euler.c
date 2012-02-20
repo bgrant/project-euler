@@ -27,41 +27,49 @@
 
 
 /*****************************************************************************/
+/* Global                                                                    */
+/*****************************************************************************/
+
+const bool TEST = false;
+const bool DEBUG = false;
+int problem8_data[];
+
+
+/*****************************************************************************/
 /* Declarations                                                              */
 /*****************************************************************************/
+
 bool is_prime(unsigned long composite);
-void test_is_prime(void);
+void test_is_prime();
 
 int max_nprimes_below(unsigned long n);
 unsigned long nth_prime_upper_bound(int n);
 
 unsigned long nth_prime(int n);
-void test_nth_prime(void);
+void test_nth_prime();
 
 int prime_sieve(unsigned long n, unsigned long * primes);
-void test_prime_sieve(void);
+void test_prime_sieve();
 
 bool is_palindrome(const unsigned long num);
-void test_is_palindrome(void);
+void test_is_palindrome();
 
 int word_value(const char * word);
-void test_word_value(void);
+void test_word_value();
 
-int           problem1(void);
-int           problem2(void);
-unsigned long problem3(void);
-unsigned long problem4(void);
-int           problem5(void);
-int           problem6(void);
-unsigned long problem7(void);
-int           problem8(void);
-int           problem9(void);
-unsigned long problem10(void);
-unsigned long problem22(void);
+int           problem1();
+int           problem2();
+unsigned long problem3();
+unsigned long problem4();
+int           problem5();
+int           problem6();
+unsigned long problem7();
+int           problem8();
+int           problem9();
+unsigned long problem10();
+unsigned long problem22();
 
-int problem8_data[];
-const bool DEBUG = false;
-
+void test_all();
 
 /*****************************************************************************/
 /* Utility functions                                                         */
@@ -88,6 +96,7 @@ bool is_prime(unsigned long n) {
 }
 
 void test_is_prime() {
+    printf("Testing is_prime...\n");
     int primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 101,
         0};
     int composites[] = {4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 100,
@@ -100,7 +109,9 @@ void test_is_prime() {
 //        printf("%d: %d\n", composites[i], is_prime(composites[i]));
         assert(!is_prime(composites[i]));
     }
+    printf("Testing completed.\n");
 }
+
 
 // Upper bound for prime counting function
 // From Wikipedia: Prime-counting function
@@ -112,20 +123,28 @@ int max_nprimes_below(unsigned long n) {
     }
 }
 
+
 // Upper bound for the nth prime, for n >= 6
 // From Wikipedia: Prime-counting function
 unsigned long nth_prime_upper_bound(int n) {
+    if (n < 6) 
+        assert(false);
     n += 1; // this formula uses 1-based indexing
     return ceil(n*(log(n) + log(log(n))));
 }
 
+
 // Fills array 'primes' with of primes < n, terminates with a 0
-// Returns nprimes
+// Returns nprimes, or -1 on error
 // Uses Sieve of Eratosthenes
 int prime_sieve(unsigned long n, unsigned long * primes) {
 
+    // check inputs
+    if (primes == NULL || n <= 0)
+        return -1;
+
     // indicates if pmask[i] is prime
-    bool * pmask = malloc(sizeof(bool)*n);
+    bool * pmask = malloc(n*sizeof(bool));
 
     // initialize pmask
     for (unsigned long i=0; i < n; ++i)
@@ -159,6 +178,7 @@ int prime_sieve(unsigned long n, unsigned long * primes) {
 }
 
 void test_prime_sieve() {
+    printf("Testing prime number sieve...\n");
     const int N = 44;
     unsigned long known_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37,
         41, 43, 0}; // 0 terminated
@@ -166,22 +186,26 @@ void test_prime_sieve() {
     unsigned long * primes = malloc(sizeof(unsigned long) *
             (max_nprimes_below(N) + 1));
 
-    printf("Testing prime number sieve...\n");
     nprimes = prime_sieve(N, primes);
     assert(nprimes == 14);
 
     for (int i=0; primes[i]; ++i) {
-        printf("%ld == %ld\n", primes[i], known_primes[i]);
+        if (DEBUG)
+            printf("%ld == %ld\n", primes[i], known_primes[i]);
         assert(primes[i] == known_primes[i]);
     }
 
     free(primes);
+    printf("Testing completed.\n");
 }
+
 
 unsigned long nth_prime(int n) {
     unsigned long answer = 0;
     unsigned long ulimit = -1;
     unsigned long * primes;
+
+    assert(n >=0);
 
     if (n < 7) {
         ulimit = 20;
@@ -199,13 +223,16 @@ unsigned long nth_prime(int n) {
 }
 
 void test_nth_prime() {
+    printf("Testing nth_prime...\n");
     unsigned long known_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37,
         41, 43, 0}; // 0 terminated
     for (int i=0; known_primes[i]; ++i) {
         //printf("%d: %ld\n", i, nth_prime(i));
         assert(nth_prime(i) == known_primes[i]);
     }
+    printf("Testing completed.\n");
 }
+
 
 bool is_palindrome(const unsigned long num) {
     char num_str[10];
@@ -221,6 +248,7 @@ bool is_palindrome(const unsigned long num) {
 }
 
 void test_is_palindrome() {
+    printf("Testing is_palindrome...\n");
     assert(is_palindrome(90909));
     assert(is_palindrome(11111));
     assert(is_palindrome(19191));
@@ -232,20 +260,26 @@ void test_is_palindrome() {
     assert(!is_palindrome(98765));
     assert(!is_palindrome(954));
     assert(!is_palindrome(21));
+    printf("Testing completed.\n");
 }
+
 
 // Find value of a string (sum of values of its letters)
 // Value of a letter is its 1-based position in the alphabet:
 // A=1, B=2, etc.
 int word_value(const char * word) {
     int sum = 0;
+    if (word == NULL)
+        return -1;
+
     for (int i=0; word[i]; ++i) {
         sum += (int)word[i] - 64;
     }
     return sum;
 }
 
-void test_word_value(void) {
+void test_word_value() {
+    printf("Testing word_value...\n");
     char str[2];
     int i=1;
     int val=0;
@@ -256,6 +290,7 @@ void test_word_value(void) {
         assert(val == i++);
     }
     assert(word_value("COLIN") == 53);
+    printf("Testing completed.\n");
 }
 
 
@@ -263,8 +298,9 @@ void test_word_value(void) {
 /* Problems                                                                  */
 /*****************************************************************************/
 
+
 // Find the sum of all the multiple of 3 or 5 below 1000.
-int problem1(void) {
+int problem1() {
     const int ULIMIT = 1000;
     int i, sum;
     sum = 0;
@@ -275,9 +311,10 @@ int problem1(void) {
     return(sum);
 }
 
+
 // Find the sum of the even-valued Fibonacci terms less than four
 // million.
-int problem2(void) {
+int problem2() {
     const int ULIMIT = 4000000;
     int a, b, sum;
     sum = 0;
@@ -292,8 +329,9 @@ int problem2(void) {
     return(sum);
 }
 
+
 // What is the largest prime factor of the number 600851475143 ?
-unsigned long problem3(void) {
+unsigned long problem3() {
     const unsigned long NUM = 600851475143;
     unsigned long ulimit = floor(sqrt(NUM)); // ulimit for prime factors
     unsigned long * primes = malloc(sizeof(unsigned long) *
@@ -312,8 +350,9 @@ unsigned long problem3(void) {
     return retval;
 }
 
+
 // Find the largest palindrome made from the product of two 3-digit numbers.
-unsigned long problem4(void) {
+unsigned long problem4() {
     const int NPRODS = 99*(99+1)/2;
     unsigned long products[NPRODS];
     int index = 0;
@@ -340,9 +379,10 @@ unsigned long problem4(void) {
     return max_palindrome;
 }
 
+
 // Find the smallest number evenly divisible by all the numbers from 1
 // to 20.
-int problem5(void) {
+int problem5() {
     const int NDIVISORS = 10;
     // We don't need to try numbers that are multiples of other numbers
     const int divisors[] = {20, 19, 18, 17, 16, 15, 14, 13, 12, 11};
@@ -359,9 +399,10 @@ int problem5(void) {
     }
 }
 
+
 // Find the difference between the sum of squares and the square of the
 // sum of the first 100 natural numbers.
-int problem6(void) {
+int problem6() {
     const int ULIMIT = 100;
     int i, sum, sum_of_squares;
     sum = (1 + ULIMIT) * (ULIMIT / 2);
@@ -372,15 +413,17 @@ int problem6(void) {
     return(sum*sum - sum_of_squares);
 }
 
+
 // Find the 10001st prime.
-unsigned long problem7(void) {
+unsigned long problem7() {
     const int PRIME_INDEX = 10000;
     return nth_prime(PRIME_INDEX);
 }
 
+
 // Find the greatest product of five consecutive digits in the
 // 1000-digit number (problem8_data).
-int problem8(void) {
+int problem8() {
     int *d = problem8_data;
     int max_product, product = 1;
     for (int i=4; problem8_data[i] != -99; ++i) {
@@ -392,9 +435,10 @@ int problem8(void) {
     return max_product;
 }
 
+
 // There exists exactly one Pythagorean triplet for which a + b + c =
 // 1000.  Find the product abc.
-int problem9(void) {
+int problem9() {
     int target = 1000;
     int c = 1;
     int cc = 1;
@@ -413,8 +457,9 @@ int problem9(void) {
     return 0;
 }
 
+
 // Find the sum of all primes below two million.
-unsigned long problem10(void) {
+unsigned long problem10() {
     const unsigned long ULIMIT = 2000000;
     unsigned long * primes = malloc(sizeof(unsigned long) *
             (max_nprimes_below(ULIMIT) + 1));
@@ -426,10 +471,11 @@ unsigned long problem10(void) {
     return sum;
 }
 
+
 // What is the total of all the name scores in the file?
 // A name score is calculated as:
 // (alphanumeric_word_value * position_in_sorted_wordlist)
-unsigned long problem22(void) {
+unsigned long problem22() {
     const unsigned int NCHARS = 46448; // counted in vim
     const unsigned int NWORDS = 5163;  // counted in vim
     const unsigned int MAX_WORDLENGTH = 20;
@@ -467,6 +513,8 @@ unsigned long problem22(void) {
 }
 
 int main() {
+    if (TEST) test_all();
+
     unsigned long ans = problem22();
     if (ans != -1) {
         printf("%lu\n", ans);
@@ -477,6 +525,13 @@ int main() {
     }
 }
 
+void test_all() {
+    test_is_prime();
+    test_nth_prime();
+    test_prime_sieve();
+    test_is_palindrome();
+    test_word_value();
+}
 
 /*****************************************************************************/
 /* Data                                                                      */
