@@ -514,16 +514,22 @@ unsigned long problem22() {
 }
 
 int main() {
-    if (TEST) test_all();
+    if (TEST)
+        test_all();
 
-    unsigned long ans = problem22();
-    if (ans != -1) {
-        printf("%lu\n", ans);
-        exit(EXIT_SUCCESS);
-    } else {
-        fprintf(stderr, "Error... exiting.\n");
-        exit(EXIT_FAILURE);
-    }
+    printf("Problem 1:  %d\n",  problem1());
+    printf("Problem 2:  %d\n",  problem2());
+    printf("Problem 3:  %lu\n", problem3());
+    printf("Problem 4:  %lu\n", problem4());
+    printf("Problem 5:  %d\n",  problem5());
+    printf("Problem 6:  %d\n",  problem6());
+    printf("Problem 7:  %lu\n", problem7());
+    printf("Problem 8:  %d\n",  problem8());
+    printf("Problem 9:  %d\n",  problem9());
+    printf("Problem 10: %lu\n", problem10());
+    printf("Problem 11: %lu\n", problem22());
+
+    exit(EXIT_SUCCESS);
 }
 
 void test_all() {
