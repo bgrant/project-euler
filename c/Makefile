@@ -1,11 +1,12 @@
 CSRC    = euler.c
+CC      = clang
 CFLAGS  = -gW -pedantic -O0
 
 euler: $(CSRC)
-	clang $(CFLAGS) $(CSRC) -o euler
+	$(CC) $(CFLAGS) $(CSRC) -o euler
 
 tags:
-	rm tags ; ctags *.c *.h
+	rm -f tags ; ctags *.c *.h
 
 clean:
 	rm -f euler tags ; rm -rf *.dSYM
