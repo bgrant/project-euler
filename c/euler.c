@@ -467,8 +467,14 @@ unsigned long problem22(void) {
 }
 
 int main() {
-    printf("%lu\n", problem22());
-    return(0);
+    unsigned long ans = problem22();
+    if (ans != -1) {
+        printf("%lu\n", ans);
+        exit(EXIT_SUCCESS);
+    } else {
+        fprintf(stderr, "Error... exiting.\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 
