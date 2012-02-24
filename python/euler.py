@@ -1029,6 +1029,7 @@ def problem26_impl1(ulimit=1000, start_precision=10, progress=False):
             print cycle_lens[x]
     return cycle_lens.argmax()
 
+
 problem26 = problem26_impl1
 
 
