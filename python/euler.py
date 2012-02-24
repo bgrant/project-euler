@@ -25,6 +25,7 @@ from __future__ import division
 import itertools
 import decimal
 import english_numbers
+import fractions
 
 from itertools import takewhile, dropwhile, islice, imap,\
         count, permutations, chain, ifilter, groupby, cycle
@@ -1134,6 +1135,43 @@ def problem32(progress=False):
         valid_products = (eqn[2] for eqn in eqns if is_valid(eqn))
         products = products.union(set(valid_products))
     return sum(products)
+
+
+def problem33():
+    """Find the product of the four simplified fractions that simplify
+    correctly using an unorthodox cancelling method, are non-trivial,
+    are less than 1, and contain two digits in the numerator and
+    denominator.
+    """
+    def orthodox(n, d):
+        frac = fractions.Fraction(n, d)
+        return (frac.numerator, frac.denominator)
+
+    def unorthodox(n, d):
+        nstr = str(n)
+        dstr = str(d)
+        if nstr[0] == dstr[0]:
+            cancelled = (int(nstr[1]), int(dstr[1]))
+        elif nstr[0] == dstr[1]:
+            cancelled = (int(nstr[1]), int(dstr[0]))
+        elif nstr[1] == dstr[0]:
+            cancelled = (int(nstr[0]), int(dstr[1]))
+        elif nstr[1] == dstr[1]:
+            cancelled = (int(nstr[0]), int(dstr[0]))
+        else:
+            cancelled = False
+
+        if cancelled and cancelled[1] != 0:
+            return orthodox(*cancelled)
+        else:
+            return False
+
+    # fractions less than 1, 2 digits in numerator and denominator
+    possibles = ((n,d) for d in range(11,100) for n in range(10, d))
+    fracs =  [fractions.Fraction(n,d) for (n,d) in possibles
+            if (unorthodox(n,d) == orthodox(n,d))
+            if not(str(n)[1] == str(d)[1] == '0')]
+    return reduce(lambda x,y: x*y, fracs)
 
 
 def problem34(ulimit=int(1e5)):
