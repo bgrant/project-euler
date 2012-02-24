@@ -362,12 +362,28 @@ def primes_impl4(n):
         possibles = possibles[possibles % newest_prime != 0]
 
 
+def primes_impl5(n):
+    """Find primes less than n using Sieve of Eratosthenes.
+
+    This one is finally fast enough.  The constant copying and
+    allocating in the previous versions must have been really slow.
+    """
+    is_primes = [True for x in range(n)]
+    is_primes[0] = is_primes[1] = False
+    for i in range(n):
+        if not is_primes[i]:
+            continue
+        for j in range(i+i, n, i):
+            is_primes[j] = False
+    return [x for x in range(n) if is_primes[x]]
+
+
 def primes(n=None):
     """Top level primes generator."""
     if n is None:
         return primes_impl0()
     else:
-        return primes_impl4(n)
+        return primes_impl5(n)
 
 
 def fibonacci():
@@ -656,10 +672,7 @@ def problem9(n=1000):
 
 
 def problem10(n=int(2e6)):
-    """Compute sum of primes below n.
-
-    TODO: Not yet fast enough.
-    """
+    """Compute sum of primes below n."""
     return sum(primes(n))
 
 
