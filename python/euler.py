@@ -606,6 +606,31 @@ def dates():
                 year = years.next()
 
 
+def nways(target, denoms):
+    """Find how many linear combinations of the integers in `denoms`
+    equal `target`.
+
+    `denoms` is assumed to be a list sorted max to min.
+
+    It's already fast enough, so I didn't bother with dynamic
+    programming.
+    """
+    if len(denoms) == 0:
+        return 0
+    elif len(denoms) == 1:
+        if target % denoms[0] == 0:
+            return 1
+        else:
+            return 0
+    else:
+        count = 0
+        a = 0
+        while a < target:
+            count += nways(target - a, denoms[1:])
+            a += denoms[0]
+        return count + nways(target, [denoms[0]])
+
+
 ################
 ### Problems ###
 ################
@@ -1066,6 +1091,16 @@ def problem30(n=5):
         ulimit = ulimit * 10
     nums = (x for x in xrange(10, ulimit + 1) if sum(digit_powers(x, n)) == x)
     return sum(nums)
+
+
+def problem31():
+    """Find the number of different ways can 200p be made using any
+    number of coins.
+    """
+    denoms = [1, 2, 5, 10, 20, 50, 100, 200]
+    denoms.reverse()
+    target = 200
+    return nways(target, denoms)
 
 
 def problem32(progress=False):
