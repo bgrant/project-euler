@@ -442,9 +442,11 @@ def is_pandigital(n):
                 digit_set == set(matches[:ndigits(n)])
 
 
-def pandigitals(n):
+def pandigitals(n, zero=False):
     """Yield all pandigital numbers with n digits."""
     digits = '987654321'
+    if zero:
+        digits = digits + '0'
     for x in permutations(digits[len(digits) - n:]):
         yield cton(x)
 
@@ -1331,6 +1333,31 @@ def problem42():
     maxval = max(nums)
     possible_triangles = set(takewhile(lambda x: x <= maxval, triangle_ns()))
     return sum(1 for n in nums if n in possible_triangles)
+
+
+def problem43():
+    """Find the sum of all the 0-9 pandigitals s.t.
+        d2d3d4=406 is divisible by 2
+        d3d4d5=063 is divisible by 3
+        d4d5d6=635 is divisible by 5
+        d5d6d7=357 is divisible by 7
+        d6d7d8=572 is divisible by 11
+        d7d8d9=728 is divisible by 13
+        d8d9d10=289 is divisible by 17
+
+    The above uses 1-based indexing, while my code uses 0-based
+    indexing.
+
+    TODO: too slow (265.62s)
+    """
+    def pred(n, start, divisor):
+        return divides(divisor, cton(chars(n)[start:start+3]))
+
+    divisors = (2, 3, 5, 7, 11, 13, 17)
+    ps = pandigitals(10, zero=True)
+    answers = (n for n in ps if all([pred(n, start, div)
+                for (start, div) in zip(count(1), divisors)]))
+    return sum(answers)
 
 
 def problem45(llimit=40755):
