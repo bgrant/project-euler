@@ -527,7 +527,7 @@ int main() {
     printf("Problem 8:  %d\n",  problem8());
     printf("Problem 9:  %d\n",  problem9());
     printf("Problem 10: %lu\n", problem10());
-    printf("Problem 11: %lu\n", problem22());
+    printf("Problem 22: %lu\n", problem22());
 
     exit(EXIT_SUCCESS);
 }
