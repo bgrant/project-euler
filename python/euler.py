@@ -774,6 +774,7 @@ def problem14_impl2(n=int(1e6)):
     """
     return array(list(take(n, collatz_lens()))).argmax() + 1
 
+
 problem14 = problem14_impl2
 
 
@@ -870,6 +871,7 @@ def problem15_impl1(side_len=20, progress=False):
             return cache[(x, y)]
 
     return count_paths(cache, 0, 0)
+
 
 problem15 = problem15_impl1
 
