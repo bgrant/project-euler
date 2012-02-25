@@ -1174,7 +1174,7 @@ def problem33():
     fracs =  [fractions.Fraction(n,d) for (n,d) in possibles
             if (unorthodox(n,d) == orthodox(n,d))
             if not(str(n)[1] == str(d)[1] == '0')]
-    return reduce(operator.mul, fracs).denominator
+    return (reduce(operator.mul, fracs)).denominator
 
 
 def problem34(ulimit=int(1e5)):
