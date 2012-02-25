@@ -26,6 +26,7 @@ import itertools
 import decimal
 import english_numbers
 import fractions
+import operator
 
 from itertools import takewhile, dropwhile, islice, imap,\
         count, permutations, chain, ifilter, groupby, cycle
@@ -1166,12 +1167,14 @@ def problem33():
         else:
             return False
 
-    # fractions less than 1, 2 digits in numerator and denominator
+    # fractions less than 1
+    # 2 digits in numerator and denominator
     possibles = ((n,d) for d in range(11,100) for n in range(10, d))
+    # filter with further constraints
     fracs =  [fractions.Fraction(n,d) for (n,d) in possibles
             if (unorthodox(n,d) == orthodox(n,d))
             if not(str(n)[1] == str(d)[1] == '0')]
-    return reduce(lambda x,y: x*y, fracs)
+    return reduce(operator.mul, fracs).denominator
 
 
 def problem34(ulimit=int(1e5)):
