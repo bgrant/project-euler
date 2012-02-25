@@ -633,6 +633,28 @@ def nways(target, denoms):
         return count + nways(target, [denoms[0]])
 
 
+def concatenated_product(n, lim):
+    """Compute the concatenation of n * range(1,lim)."""
+    return int("".join([str(n * x) for x in range(1, lim)]))
+
+
+def is_concatenated_product(n):
+    """Is the number `n` the concatenation of n * (1,2..)."""
+    def check_multiplicand(n, multiplicand):
+        """See if number is concatenated multiples of multiplicand."""
+        for i in count(2):
+            created = concatenated_product(multiplicand, i)
+            if created ==  n:
+                return True
+            elif created > n:
+                return False
+            else:
+                pass
+
+    return any(check_multiplicand(n, multiplicand) for multiplicand in
+            take(ndigits(n) // 2 + 1, right_truncations(n)))
+
+
 ################
 ### Problems ###
 ################
@@ -1214,6 +1236,20 @@ def problem37(ulimit=int(1e6)):
     truncatable_ps = (x for x in ps if set(truncations(x)).issubset(ps)
                              and x not in set([2, 3, 5, 7]))
     return sum(take(11, truncatable_ps))
+
+
+def problem38():
+    """What is the largest 1 to 9 pandigital 9-digit number that can be
+    formed as the concatenated product of an integer with (1,2,...,n)
+    where n > 1?
+
+    We can determine the first several digits of the pandigital since
+    the concatenated product starts by multiplying with the multiplier
+    1.  Possible ndigits in the multiplicand are 1 to 4.
+    """
+    pans = sorted(pandigitals(9), reverse=True)
+    return takefirst(is_concatenated_product, pans)
+
 
 def problem39(ulimit=1001):
     """For all triangles with integral side lengths and integral
