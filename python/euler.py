@@ -1306,7 +1306,7 @@ def problem45(llimit=40755):
     """
     def tph_numbers():
         """Generate numbers that are both hexagonal and pentagonal (and
-        incidentally triangular.
+        incidentally triangular).
         """
         hs = hexagonal_ns()
         ps = pentagonal_ns()
