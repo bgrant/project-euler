@@ -31,7 +31,7 @@ import operator
 from itertools import takewhile, dropwhile, islice, imap,\
         count, permutations, chain, ifilter, groupby, cycle
 from math import sqrt, factorial, log
-from scipy import array, fliplr, arange, ones, zeros, nonzero
+from scipy import array, diff, fliplr, arange, ones, zeros, nonzero
 from scipy.linalg import toeplitz, circulant
 
 __docformat__ = "restructuredtext en"
@@ -655,6 +655,29 @@ def is_concatenated_product(n):
 
     return any(check_multiplicand(n, multiplicand) for multiplicand in
             take(ndigits(n) // 2 + 1, right_truncations(n)))
+
+
+def find_three_const_sep(seq):
+    """Find all sets of three numbers with a constant separation in
+    `seq`, if any exist; else return the empty list.
+
+    Returns a list of (sorted lists of len(3)).
+    """
+    if len(seq) < 3: # has to be three elements
+        return []
+    pairs = list(itertools.combinations(seq, 2))
+    diffs = [abs(x-y) for (x,y) in pairs]
+    answers = []
+    for i in range(len(diffs)-1):
+        try:
+            match_index = diffs.index(diffs[i], i+1)
+            # This is an answer if the two pairs share a common element
+            # e.g. (1, 2), (2, 3) -> 1, 2, 3
+            if set(pairs[i]) & set(pairs[match_index]):
+               answers.append(sorted(set(pairs[i] + pairs[match_index])))
+        except(ValueError): # index didn't find a match
+            pass
+    return answers
 
 
 ################
@@ -1392,6 +1415,35 @@ def problem48(ulimit=1000):
     """Compute the sum of 1**1, 2**2, ... `ulimit`**`ulimit`."""
     total = sum(x ** x for x in xrange(1, ulimit + 1))
     return cton(chars(total)[-10:])
+
+
+def problem49():
+    """Find the 3-number arithmetic sequence s.t. each number is
+    4-digit, prime, each is a permutation of the others, and all three
+    are separated by a constant amount.
+    """
+    answers = []
+
+    # find all 4-digit primes
+    prms = set(primes(10000)) - set(primes(1000));
+    while prms:
+        p = prms.pop()
+
+        # find all permutations of p that are also prime
+        permutes = (cton(p) for p in permutations(str(p)))
+        prime_permutes = prms.intersection(set(permutes))
+
+        ans = find_three_const_sep(prime_permutes)
+        if ans:
+            answers.extend(ans)
+
+    # The problem tells us that there is only one such sequence,
+    # other than the example: 1487, 4817, 8147.
+    # Using this fact, extract and format the answer.
+    assert(len(answers)) == 2
+    for s in answers:
+        if s != [1487, 4817, 8147]:
+            return int(''.join(map(str, s)))
 
 
 def problem52():
