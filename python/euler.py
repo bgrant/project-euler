@@ -125,6 +125,7 @@ def triangle_ns_impl1():
     """Generate the triangle numbers starting with `start`."""
     return (int((1 / 2) * n * (n + 1)) for n in count(1))
 
+
 triangle_ns = triangle_ns_impl1
 
 
@@ -1338,6 +1339,7 @@ def problem41_impl1(num_digits=9):
             return prime_pandigitals.next()
         except(StopIteration):
             continue
+
 
 problem41 = problem41_impl1
 
