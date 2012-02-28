@@ -174,6 +174,7 @@ def ndivisors_impl1(n):
     cs += 1
     return cs.prod()
 
+
 ndivisors = ndivisors_impl1
 
 
@@ -204,6 +205,7 @@ def right_truncations(n):
 def truncations(n):
     """Yield all left and right truncations of n."""
     return chain(left_truncations(n), right_truncations(n))
+
 
 known_primes = [2, 3, 5, 7]
 
@@ -259,6 +261,7 @@ def nth_prime_impl1(n):
     else:
         ubound = takefirst(lambda x: prime_count(x) > 1.2 * n, count(2))
         return nth(primes(ubound), n - 1)
+
 
 # Top level nth prime function.
 nth_prime = nth_prime_impl1
