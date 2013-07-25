@@ -84,6 +84,7 @@ contains
         problem_5 = n
     end function problem_5
 
+    !! Is `n` evenly divisible by 1 .. 20?
     logical function all_divide(n)
         integer, intent(in) :: n
         integer :: d
