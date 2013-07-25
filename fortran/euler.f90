@@ -23,9 +23,11 @@ program euler
 
     print *, "Problem 1: ", problem_1()
     print *, "Problem 2: ", problem_2()
+    print *, "Problem 5: ", problem_5()
 
 
 contains
+
 
     !! Find the sum of all the multiple of 3 or 5 below 1000.
     integer function problem_1()
@@ -40,6 +42,7 @@ contains
 
         problem_1 = sum
     end function problem_1
+
 
     !! Find the sum of all even fibonnacci numbers below 4000000.
     integer function problem_2()
@@ -62,5 +65,39 @@ contains
 
         problem_2 = sum
     end function problem_2
+
+
+    !! Find the smallest number evenly divisible by 1 .. 20
+    integer function problem_5()
+        implicit none
+        integer, parameter :: STEP = 20
+        integer :: n, d
+        logical :: finished
+
+        n = 0
+        do while (.true.)
+            n = n + STEP
+            if (all_divide(n)) then
+                exit
+            endif
+        enddo
+        problem_5 = n
+    end function problem_5
+
+    logical function all_divide(n)
+        integer, intent(in) :: n
+        integer :: d
+        logical :: div
+
+        div = .true.
+        do d=19, 11, -1
+            if (mod(n, d) /= 0) then
+                div = .false.
+                exit
+            endif
+        enddo
+        all_divide  = div
+    end function all_divide
+
 
 end program euler
