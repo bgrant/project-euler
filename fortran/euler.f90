@@ -24,12 +24,10 @@ implicit none
 
 integer :: n, sum
 
-n = 0
 sum = 0
 
-do while (n .lt. 999)
-    n = n + 1
-    if ((mod(n, 3) .eq. 0) .or. (mod(n, 5) .eq. 0)) then
+do n = 1, 999
+    if ((mod(n, 3) == 0) .or. (mod(n, 5) == 0)) then
         sum = sum + n
     endif
 enddo
