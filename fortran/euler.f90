@@ -71,8 +71,7 @@ contains
     integer function problem_5()
         implicit none
         integer, parameter :: STEP = 20
-        integer :: n, d
-        logical :: finished
+        integer :: n
 
         n = 0
         do while (.true.)
