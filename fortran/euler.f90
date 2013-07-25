@@ -18,16 +18,18 @@
 !!   permissions and limitations under the License.
 
 
-!! Find the sum of all the multiple of 3 or 5 below 1000.
 program euler
     implicit none
 
     print *, "Problem 1: ", problem_1()
+    print *, "Problem 2: ", problem_2()
 
 
 contains
 
+    !! Find the sum of all the multiple of 3 or 5 below 1000.
     integer function problem_1()
+        implicit none
         integer :: n, sum
         sum = 0
         do n = 1, 999
@@ -38,5 +40,27 @@ contains
 
         problem_1 = sum
     end function problem_1
+
+    !! Find the sum of all even fibonnacci numbers below 4000000.
+    integer function problem_2()
+        implicit none
+        integer :: limit, i1, i2, temp, sum
+        limit = 4000000
+        i1 = 1
+        i2 = 1
+        temp = 0
+        sum = 0
+
+        do while (i2 < limit)
+            temp = i1 + i2
+            i1 = i2
+            i2 = temp
+            if (mod(i2, 2) == 0) then
+                sum = sum + i2
+            endif
+        enddo
+
+        problem_2 = sum
+    end function problem_2
 
 end program euler
