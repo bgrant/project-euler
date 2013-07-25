@@ -19,19 +19,24 @@
 
 
 !! Find the sum of all the multiple of 3 or 5 below 1000.
-program problem_1
-implicit none
+program euler
+    implicit none
 
-integer :: n, sum
+    print *, "Problem 1: ", problem_1()
 
-sum = 0
 
-do n = 1, 999
-    if ((mod(n, 3) == 0) .or. (mod(n, 5) == 0)) then
-        sum = sum + n
-    endif
-enddo
+contains
 
-print *, "Problem 1:", sum
+    integer function problem_1()
+        integer :: n, sum
+        sum = 0
+        do n = 1, 999
+            if ((mod(n, 3) == 0) .or. (mod(n, 5) == 0)) then
+                sum = sum + n
+            endif
+        enddo
 
-end program problem_1
+        problem_1 = sum
+    end function problem_1
+
+end program euler
