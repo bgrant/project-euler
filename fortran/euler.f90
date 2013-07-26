@@ -19,85 +19,105 @@
 
 
 program euler
+
     implicit none
+
+    interface
+
+       function problem_1()
+        integer :: problem_1
+       end function problem_1
+
+       function problem_2()
+        integer :: problem_2
+       end function problem_2
+
+       function problem_5()
+        integer :: problem_5
+       end function problem_5
+
+    end interface
 
     print *, "Problem 1: ", problem_1()
     print *, "Problem 2: ", problem_2()
     print *, "Problem 5: ", problem_5()
 
-
-contains
-
-
-    !! Find the sum of all the multiple of 3 or 5 below 1000.
-    integer function problem_1()
-        implicit none
-        integer :: n, sum
-        sum = 0
-        do n = 1, 999
-            if ((mod(n, 3) == 0) .or. (mod(n, 5) == 0)) then
-                sum = sum + n
-            endif
-        enddo
-
-        problem_1 = sum
-    end function problem_1
-
-
-    !! Find the sum of all even fibonnacci numbers below 4000000.
-    integer function problem_2()
-        implicit none
-        integer :: limit, i1, i2, temp, sum
-        limit = 4000000
-        i1 = 1
-        i2 = 1
-        temp = 0
-        sum = 0
-
-        do while (i2 < limit)
-            temp = i1 + i2
-            i1 = i2
-            i2 = temp
-            if (mod(i2, 2) == 0) then
-                sum = sum + i2
-            endif
-        enddo
-
-        problem_2 = sum
-    end function problem_2
-
-
-    !! Find the smallest number evenly divisible by 1 .. 20
-    integer function problem_5()
-        implicit none
-        integer, parameter :: STEP = 20
-        integer :: n, d
-        logical :: finished
-
-        n = 0
-        do while (.true.)
-            n = n + STEP
-            if (all_divide(n)) then
-                exit
-            endif
-        enddo
-        problem_5 = n
-    end function problem_5
-
-    logical function all_divide(n)
-        integer, intent(in) :: n
-        integer :: d
-        logical :: div
-
-        div = .true.
-        do d=19, 11, -1
-            if (mod(n, d) /= 0) then
-                div = .false.
-                exit
-            endif
-        enddo
-        all_divide  = div
-    end function all_divide
-
-
 end program euler
+
+
+!! Find the sum of all the multiples of 3 or 5 below 1000.
+integer function problem_1()
+    implicit none
+    integer :: n, sum
+    sum = 0
+    do n = 1, 999
+        if ((mod(n, 3) == 0) .or. (mod(n, 5) == 0)) then
+            sum = sum + n
+        endif
+    enddo
+
+    problem_1 = sum
+end function problem_1
+
+
+!! Find the sum of all even fibonnacci numbers below 4000000.
+integer function problem_2()
+    implicit none
+    integer :: limit, i1, i2, temp, sum
+    limit = 4000000
+    i1 = 1
+    i2 = 1
+    temp = 0
+    sum = 0
+
+    do while (i2 < limit)
+        temp = i1 + i2
+        i1 = i2
+        i2 = temp
+        if (mod(i2, 2) == 0) then
+            sum = sum + i2
+        endif
+    enddo
+
+    problem_2 = sum
+end function problem_2
+
+
+!! Find the smallest number evenly divisible by 1 .. 20
+integer function problem_5()
+    implicit none
+
+    interface
+       function all_divide(n)
+        logical :: all_divide
+        integer, intent(in) :: n
+       end function all_divide
+    end interface
+
+    integer, parameter :: STEP = 20
+    integer :: n
+
+    n = 0
+    do while (.true.)
+        n = n + STEP
+        if (all_divide(n)) then
+            exit
+        endif
+    enddo
+    problem_5 = n
+end function problem_5
+
+logical function all_divide(n)
+    integer, intent(in) :: n
+    integer :: d
+    logical :: div
+
+    div = .true.
+    do d=19, 11, -1
+        if (mod(n, d) /= 0) then
+            div = .false.
+            exit
+        endif
+    enddo
+    all_divide  = div
+end function all_divide
