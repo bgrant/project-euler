@@ -20,8 +20,6 @@
 
 program euler
 
-    implicit none
-
     interface
 
        function problem_1()
@@ -47,7 +45,6 @@ end program euler
 
 !! Find the sum of all the multiples of 3 or 5 below 1000.
 integer function problem_1()
-    implicit none
     integer :: n, sum
     sum = 0
     do n = 1, 999
@@ -62,7 +59,6 @@ end function problem_1
 
 !! Find the sum of all even fibonnacci numbers below 4000000.
 integer function problem_2()
-    implicit none
     integer :: limit, i1, i2, temp, sum
     limit = 4000000
     i1 = 1
@@ -85,7 +81,6 @@ end function problem_2
 
 !! Find the smallest number evenly divisible by 1 .. 20
 integer function problem_5()
-    implicit none
 
     interface
        function all_divide(n)
