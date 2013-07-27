@@ -23,7 +23,7 @@ c Project Euler problems in Fortran 77.
       integer problem_1
       integer problem_2
 
-      print *, "Problem 1: ", problem_1(999)
+      print *, "Problem 1: ", problem_1(1000)
       print *, "Problem 2: ", problem_2(4000000)
 
       stop
@@ -34,7 +34,7 @@ c Find the sum of all the multiples of 3 or 5 below n.
       integer function problem_1(n)
       integer n, i, total
       total = 0
-      do 10 i=1, n
+      do 10 i=1, n-1
           if ((mod(i, 3) == 0) .or. (mod(i, 5) == 0)) then
               total = total + i
           endif
