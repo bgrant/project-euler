@@ -22,12 +22,14 @@ program euler
 
     interface
 
-       function problem_1()
+       function problem_1(n)
         integer :: problem_1
+        integer, intent(in) :: n
        end function problem_1
 
-       function problem_2()
+       function problem_2(n)
         integer :: problem_2
+        integer, intent(in) :: n
        end function problem_2
 
        function problem_5()
@@ -36,20 +38,21 @@ program euler
 
     end interface
 
-    print *, "Problem 1: ", problem_1()
-    print *, "Problem 2: ", problem_2()
+    print *, "Problem 1: ", problem_1(1000)
+    print *, "Problem 2: ", problem_2(4000000)
     print *, "Problem 5: ", problem_5()
 
 end program euler
 
 
-!! Find the sum of all the multiples of 3 or 5 below 1000.
-integer function problem_1()
-    integer :: n, sum
+!! Find the sum of all the multiples of 3 or 5 below n.
+integer function problem_1(n)
+    integer, intent(in) :: n
+    integer :: i, sum
     sum = 0
-    do n = 1, 999
-        if ((mod(n, 3) == 0) .or. (mod(n, 5) == 0)) then
-            sum = sum + n
+    do i = 1, n-1
+        if ((mod(i, 3) == 0) .or. (mod(i, 5) == 0)) then
+            sum = sum + i
         endif
     enddo
 
@@ -57,16 +60,16 @@ integer function problem_1()
 end function problem_1
 
 
-!! Find the sum of all even fibonnacci numbers below 4000000.
-integer function problem_2()
+!! Find the sum of all even fibonnacci numbers below n.
+integer function problem_2(n)
+    integer, intent(in) :: n
     integer :: limit, i1, i2, temp, sum
-    limit = 4000000
     i1 = 1
     i2 = 1
     temp = 0
     sum = 0
 
-    do while (i2 < limit)
+    do while (i2 < n)
         temp = i1 + i2
         i1 = i2
         i2 = temp
