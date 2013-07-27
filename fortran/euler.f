@@ -21,8 +21,10 @@ c   permissions and limitations under the License.
 c Project Euler problems in Fortran 77.
       program euler
       integer problem_1
+      integer problem_2
 
-      print *, problem_1(999)
+      print *, "Problem 1: ", problem_1(999)
+      print *, "Problem 2: ", problem_2(4000000)
 
       stop
       end
@@ -38,5 +40,26 @@ c Find the sum of all the multiples of 3 or 5 below n.
           endif
 10    continue
       problem_1 = total
+      return
+      end
+
+
+c Find the sum of all even Fibonnacci numbers below n.
+      integer function problem_2(n)
+      integer total, n, i1, i2, temp
+
+      i1 = 0
+      i2 = 1
+      total = 0
+10    if (i2 < n) then
+          temp = i2
+          i2 = i1 + i2
+          i1 = temp
+          if (mod(i2, 2) == 0) then
+              total = total + i2
+          endif
+          goto 10
+      endif
+      problem_2 = total
       return
       end
