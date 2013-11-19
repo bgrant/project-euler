@@ -5,8 +5,10 @@ FLAGS	= -fimplicit-none
 
 all: euler77 euler90
 
-python:
+python77:
 	f2py -c $(SRC77) -m euler77
+
+python90:
 	f2py -c $(SRC90) -m euler90
 
 euler77: $(SRC77)
