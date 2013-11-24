@@ -358,6 +358,42 @@ function problem20()
 end
 
 
+# determine if i can be written as the sum of a prime and twice a square
+function prime_square(i, primes, squares)
+    for p in primes
+        if p > i
+            break
+        end
+        for s in squares
+            summation = p + s
+            if summation > i
+                break
+            elseif summation == i
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
+# compute the smallest odd composite number that cannot be written as
+# the sum of a prime and twice a square
+function problem46(ulimit=int(2e6))
+    primes = esieve(ulimit)
+    prime_set = IntSet()
+    union!(prime_set, primes)
+    squares = [2*(x^2) for x in 1:int(ceil(sqrt(ulimit/2)))]
+    i = 1
+    while true
+        i += 2
+        if !(i in prime_set) && !check_prime_square(i, primes, squares)
+            return i
+        end
+    end
+end
+
+
 # compute the first consecutive `n` numbers to have `n` distinct prime
 # factors
 function problem47(n=4)
