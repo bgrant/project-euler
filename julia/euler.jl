@@ -197,6 +197,24 @@ function todigits(s)
 end
 
 
+# compute all the prime factors of n
+function prime_factors(n)
+    primes = Int64[]
+    i = 2
+    while n != 1
+        if n % i == 0
+            if isempty(primes) || (last(primes) != i)
+                append!(primes, [i])
+            end
+            n = div(n, i)
+        else
+            i += 1
+        end
+    end
+    return primes
+end
+
+
 ## Problems
 
 
@@ -222,17 +240,7 @@ end
 
 # compute the largest prime factor of `n`
 function problem3(n=600851475143)
-    i = 2
-    largest_prime_factor = 1
-    while n != 1
-        if n % i == 0
-            largest_prime_factor = i
-            n = div(n, i)
-        else
-            i += 1
-        end
-    end
-    return largest_prime_factor
+    return last(prime_factors(n))
 end
 
 
@@ -350,6 +358,29 @@ function problem20()
 end
 
 
+# compute the first consecutive `n` numbers to have `n` distinct prime
+# factors
+function problem47(n=4)
+    i = 2
+    streak_len = n
+    streak = Int64[]
+
+    while true
+        pfs = prime_factors(i)
+        if length(pfs) == n
+            append!(streak, [i])
+        else
+            streak = Int64[]
+        end
+        if length(streak) == n
+            return first(streak)
+        end
+        i += 1
+    end
+
+end
+
+
 # find the prime below `ulimit` that is the sum of the longest number of
 # consecutive primes
 function problem50(ulimit=int(1e6))
@@ -375,5 +406,4 @@ function problem50(ulimit=int(1e6))
     end
     return prime_sum, max_len
 end
-
 
