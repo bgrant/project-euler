@@ -136,11 +136,13 @@ problem_59_dta =
 ## Helper functions
 
 
+# return if n is identical to its reverse
 function ispalindrome(n)
     string(n) == reverse(string(n))
 end
 
 
+# compute an upper bound for the nth prime
 function nth_prime_ulimit(n)
     if n < 6
         throw(DomainError())
@@ -194,6 +196,7 @@ function max_diag_product(dta, chunksize)
 end
 
 
+# convert a string to an array of digits
 function todigits(s)
     return [int(string(c)) for c in string(s)]
 end
