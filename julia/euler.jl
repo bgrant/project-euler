@@ -593,6 +593,7 @@ function problem79(dta=problem_79_dta)
 end
 
 
+# count digit-square-sum chains
 function problem92(ulimit::Int64=int(10e6)-1)
     count::Int64 = 0
     cache_1s = IntSet(1)
