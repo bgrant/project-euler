@@ -583,6 +583,28 @@ function problem59(dta=problem_59_dta)
 end
 
 
+# compute the numerator of the nth convergent of the continued fraction
+# for e
+function problem65(n=100)
+    n -= 1
+    k = iceil(n/3)
+    terms = ones(Int, (3, k))
+    terms[2, :] = 2:2:2*k
+    reshape(terms, (1, k*3))
+    terms = terms[1:n]
+
+    initial = 2
+    push!(reverse!(terms), initial)
+
+    summation = BigInt(terms[1])
+    for term in terms[2:]
+        summation = term + 1 // summation
+    end
+
+    return sum(todigits(string(num(summation))))
+end
+
+
 # compute the shortest possible pin given the data
 # I ignore the possibility of repeated digits
 function problem79(dta=problem_79_dta)
@@ -590,6 +612,80 @@ function problem79(dta=problem_79_dta)
     lt(x,y) = y in lt_dta[x]
     digits = collect(keys(lt_dta))
     return sort(digits, 1, lt=lt)
+end
+
+
+function roman_to_int(s::String)
+    r2i = {'I' => 1,
+           'V' => 5,
+           'X' => 10,
+           'L' => 50,
+           'C' => 100,
+           'D' => 500,
+           'M' => 1000}
+    summation = 0
+    i = 1
+    while i <= length(s)
+        val = r2i[s[i]]
+        if (i < length(s)) && (val < r2i[s[i+1]])
+            summation += r2i[s[i+1]] - val
+            i += 2
+        else
+            summation += val
+            i += 1
+        end
+    end
+    return summation
+end
+
+
+function simplify_roman(s::String)
+    simp = {"IIII" => "IV",
+            "VIIII" => "IX",
+            "XXXX" => "XL",
+            "LXXXX" => "XC",
+            "CCCC" => "CD",
+            "DCCCC" => "CM"}
+    patterns = ["DCCCC", "CCCC", "LXXXX", "XXXX", "VIIII", "IIII"]
+    for p in patterns
+        s = replace(s, p, simp[p])
+    end
+    return s
+end
+
+
+function int_to_roman(num::Int)
+    i2r = {1 => "I",
+           5 => "V",
+           10 => "X",
+           50 => "L",
+           100 => "C",
+           500 => "D",
+           1000 => "M"}
+    values = [1000, 500, 100, 50, 10, 5, 1]
+
+    i = 1
+    roman = String[]
+    while i <= length(values)
+        if num >= values[i]
+            push!(roman, i2r[values[i]])
+            num -= values[i]
+        else
+            reps = 0
+            i += 1
+        end
+    end
+    return simplify_roman(join(roman, ""))
+end
+
+
+function problem89()
+    f = open("roman.txt")
+    lines = map(chomp, readlines(f))
+    ints = map(roman_to_int, lines)
+    romans = map(int_to_roman, ints)
+    close(f)
+    return sum(map(length, lines) - map(length, romans))
 end
 
 
