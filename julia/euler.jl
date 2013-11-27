@@ -502,7 +502,7 @@ function problem46(ulimit=int(2e6))
     primes = esieve(ulimit)
     prime_set = IntSet()
     union!(prime_set, primes)
-    squares = [2*(x^2) for x in 1:int(ceil(sqrt(ulimit/2)))]
+    squares = [2*(x^2) for x in 1:iceil(sqrt(ulimit/2))]
     i = 1
     while true
         i += 2
