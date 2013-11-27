@@ -201,10 +201,41 @@ function max_diag_product(dta, chunksize)
     return cur_max
 end
 
+# convert an Int to an array of digits
+function todigits(num::Int64)
+    arr = Int64[]
+    while true
+        next = div(num, 10)
+        d = num - next*10  # digit
+        push!(arr, d)
+        if next == 0
+            break
+        end
+        num = next
+    end
+    return reverse!(arr)
+end
 
-# convert a string to an array of digits
-function todigits(s)
-    return [int(string(c)) for c in string(s)]
+
+# convert any iterable to an array of digits
+function todigits(val)
+    return [int(string(d)) for d in val]
+end
+
+
+# sum the squares of all the digits of number `num`
+function sum_digit_squares(num::Int64)
+    summation = 0
+    while true
+        next = div(num, 10)
+        d = num - next*10  # digit
+        summation += d^2
+        if next == 0
+            break
+        end
+        num = next
+    end
+    return summation
 end
 
 
@@ -436,13 +467,13 @@ end
 
 # compute the sum of the digits of 2^1000
 function problem16()
-    return sum(todigits(BigInt(2)^1000))
+    return sum(todigits(string(BigInt(2)^1000)))
 end
 
 
 # compute the sum of the digits of 100!
 function problem20()
-    return sum(todigits(factorial(BigInt(100))))
+    return sum(todigits(string(factorial(BigInt(100)))))
 end
 
 
@@ -559,4 +590,36 @@ function problem79(dta=problem_79_dta)
     lt(x,y) = y in lt_dta[x]
     digits = collect(keys(lt_dta))
     return sort(digits, 1, lt=lt)
+end
+
+
+function problem92(ulimit::Int64=int(10e6)-1)
+    count::Int64 = 0
+    cache_1s = IntSet(1)
+    cache_89s = IntSet(89)
+
+    init_len = 9^2 * length(todigits(ulimit))
+    sizehint(cache_1s, init_len)
+    sizehint(cache_89s, init_len)
+
+    for x in 1:ulimit
+        val::Int64 = sum_digit_squares(x)
+        while true
+            if val in cache_1s
+                if x < init_len
+                    push!(cache_1s, x)
+                end
+                break
+            elseif val in cache_89s
+                if x < init_len
+                    push!(cache_89s, x)
+                end
+                count += 1
+                break
+            else
+                val = sum_digit_squares(val)
+            end
+        end
+    end
+    return count
 end
