@@ -600,3 +600,34 @@ function problem79(dta=problem_79_dta)
     digits = collect(keys(lt_dta))
     return sort(digits, 1, lt=lt)
 end
+
+
+# find the sum of the minimum sum path from top-left to bottom-right,
+# travelling only down or right
+function problem81()
+    mat = readcsv("matrix.txt", Int)
+    path_sum_cache = zeros(Int, size(mat)) - 1
+    ilim, jlim = size(mat)
+
+    function min_path(i=1, j=1)
+        if (i == ilim) && (j == jlim)
+            path_sum_cache[i, j] = mat[i, j]
+        elseif i == ilim
+            if path_sum_cache[i, j] == -1
+                path_sum_cache[i, j] = mat[i, j] + min_path(i, j+1)
+            end
+        elseif j == jlim
+            if path_sum_cache[i, j] == -1
+                path_sum_cache[i, j] = mat[i, j] + min_path(i+1, j)
+            end
+        else
+            if path_sum_cache[i, j] == -1
+                path_sum_cache[i, j] = mat[i, j] + min(min_path(i, j+1),
+                                                       min_path(i+1, j))
+            end
+        end
+        return path_sum_cache[i, j]
+    end
+
+    return min_path()
+end
