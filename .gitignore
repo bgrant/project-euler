@@ -1,2 +1,4 @@
 attic/*
 cpp/build/*
+*.so
+*.o
